@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SALVAGGIO family 👨‍👩‍👦</title>
+    
+    <!-- PWA Manifest integrato per installazione nativa -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        &quot;name&quot;: &quot;SALVAGGIO family&quot;,
+        &quot;short_name&quot;: &quot;SALVAGGIO&quot;,
+        &quot;start_url&quot;: &quot;./index.html&quot;,
+        &quot;display&quot;: &quot;standalone&quot;,
+        &quot;background_color&quot;: &quot;#0f172a&quot;,
+        &quot;theme_color&quot;: &quot;#18181b&quot;,
+        &quot;icons&quot;: [{&quot;src&quot;: &quot;https://raw.githubusercontent.com/fortawesome/Font-Awesome/6.x/svgs/solid/house-chimney.svg&quot;, &quot;sizes&quot;: &quot;512x512&quot;, &quot;type&quot;: &quot;image/svg+xml&quot;}]
+    }">
+    <meta name="theme-color" content="#18181b">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        brand: ['Fredoka', 'sans-serif'],
+                    },
+                    colors: {
+                        theme: {
+                            primary: 'var(--color-primary)',
+                            primaryDark: 'var(--color-primary-dark)',
+                            accent: 'var(--color-accent)',
+                            bgDark: '#0B0F19',
+                            cardDark: '#131C2E'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-brand {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+
+        :root {
+            --color-primary: #18181b;
+            --color-primary-dark: #09090b;
+            --color-accent: #3f3f46;
+            --bg-skin: #f4f4f5;
+            --bg-pattern: radial-gradient(#d4d4d8 1px, transparent 1px);
+            --bg-size: 16px 16px;
+        }
+
+        .theme-bw {
+            --color-primary: #000000;
+            --color-primary-dark: #111111;
+            --color-accent: #52525b;
+            --bg-skin: #ffffff;
+            --bg-pattern: linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+            --bg-size: 20px 20px;
+        }
+
+        .theme-abstract-geo {
+            --color-primary: #3b82f6;
+            --color-primary-dark: #1d4ed8;
+            --color-accent: #60a5fa;
+            --bg-skin: #0f172a;
+            --bg-pattern: radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.4) 0px, transparent 40%),
+                            radial-gradient(circle at 85% 85%, rgba(147, 51, 234, 0.35) 0px, transparent 45%),
+                            radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.25) 0px, transparent 50%),
+                            linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --bg-size: 100% 100%;
+        }
+
+        .theme-fluid-waves {
+            --color-primary: #0284c7;
+            --color-primary-dark: #0369a1;
+            --color-accent: #38bdf8;
+            --bg-skin: #0c4a6e;
+            --bg-pattern: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%),
+                            radial-gradient(at 50% 0%, hsla(225,39%,25%,1) 0, transparent 50%),
+                            radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%),
+                            radial-gradient(at 0% 100%, hsla(172,60%,20%,1) 0, transparent 50%),
+                            radial-gradient(at 100% 100%, hsla(242,50%,20%,1) 0, transparent 50%);
+            --bg-size: 100% 100%;
+        }
+
+        .theme-memphis {
+            --color-primary: #ec4899;
+            --color-primary-dark: #be185d;
+            --color-accent: #f43f5e;
+            --bg-skin: #fdf2f8;
+            --bg-pattern: radial-gradient(#f43f5e 1.5px, transparent 1.5px), radial-gradient(#8b5cf6 1.5px, #fdf2f8 1.5px);
+            --bg-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+        }
+
+        body {
+            background-color: var(--bg-skin);
+            background-image: var(--bg-pattern);
+            background-size: var(--bg-size);
+            background-attachment: fixed;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass-card {
+            background: rgba(19, 28, 46, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tap-active:active { transform: scale(0.96); transition: transform 0.1s; }
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-gray-800 dark:bg-theme-bgDark dark:text-gray-100 font-sans min-h-screen pb-24 transition-colors duration-300">
+
+    <!-- SCHERMATA LOGIN & PRESENTAZIONE -->
+    <div id="welcomeLoginOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-zinc-900 to-black text-white transition-opacity duration-300">
+        <div class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 text-center relative overflow-hidden">
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-indigo-500/30 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-36 h-36 bg-rose-500/30 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="space-y-2">
+                <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-indigo-500 to-rose-500 flex items-center justify-center text-4xl shadow-xl">
+                    👨‍👩‍👦
+                </div>
+                <h1 class="text-3xl font-bold tracking-wide font-brand text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-rose-300 to-indigo-200 pt-2">SALVAGGIO family</h1>
+                <p class="text-xs text-gray-300 font-medium">Benvenuto! Seleziona il tuo profilo ed effettua l'accesso[cite: 1].</p>
+            </div>
+
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="text-xs font-semibold text-gray-300 uppercase tracking-wider block mb-1">Seleziona Utente</label>
+                    <select id="loginUserSelect" required class="w-full bg-black/40 border border-white/20 text-white rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-gray-300 uppercase tracking-wider block mb-1">PIN o Password</label>
+                    <input type="password" id="loginPasswordInput" required placeholder="••••" class="w-full bg-black/40 border border-white/20 text-white rounded-xl p-3 text-sm text-center tracking-widest font-bold focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3.5 rounded-xl shadow-lg tap-active transition-all text-sm flex items-center justify-center space-x-2">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Accedi all'App</span>
+                </button>
+            </form>
+
+            <div class="pt-2 border-t border-white/10 text-[11px] text-gray-400">
+                <span>PIN predefinito per tutti gli utenti: </span><strong class="text-white">1234</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER APP MAIN -->
+    <header class="glass-card sticky top-0 z-40 px-4 py-3 flex justify-between items-center shadow-sm">
+        <div class="flex items-center space-x-3">
+            <div id="userAvatar" class="w-10 h-10 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center text-xl shadow-md cursor-pointer tap-active" onclick="showTab('settings')">
+                👨‍👩‍👦
+            </div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-base font-bold leading-tight font-brand tracking-wide text-indigo-600 dark:text-indigo-400" id="headerTitle">SALVAGGIO family</h1>
+                    <span id="activeUserBadge" class="text-[10px] bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 font-bold px-2 py-0.5 rounded-md">Ospite</span>
+                </div>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400" id="headerSubtitle">Gestione Condivisa</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleDarkMode()" title="Cambia Tema Chiaro/Scuro" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 tap-active">
+                <i class="fas fa-moon dark:hidden"></i>
+                <i class="fas fa-sun hidden dark:inline"></i>
+            </button>
+            <button onclick="performAppLogout()" title="Disconnetti Utente" class="p-2 rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-300 font-bold text-xs tap-active flex items-center space-x-1">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="hidden sm:inline">Logout</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-2xl mx-auto p-4 space-y-5">
+
+        <!-- TAB 1: FINANZE & GIACENZA -->
+        <section id="tab-finanze" class="tab-content space-y-4">
+            <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 text-white rounded-3xl p-5 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-xs uppercase tracking-wider opacity-80 font-medium">Giacenza Disponibile</span>
+                    <i class="fas fa-wallet text-xl opacity-80"></i>
+                </div>
+                <div class="text-3xl font-extrabold tracking-tight mb-4" id="statGiacenza">€ 0,00</div>
+                <div class="grid grid-cols-2 gap-2 pt-3 border-t border-white/20">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-7 h-7 rounded-full bg-emerald-500/30 flex items-center justify-center text-emerald-300 text-xs">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div>
+                            <div class="text-[10px] opacity-75">Entrate Mese Corrente</div>
+                            <div class="text-sm font-bold text-emerald-300" id="statEntrate">€ 0,00</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-7 h-7 rounded-full bg-rose-500/30 flex items-center justify-center text-rose-300 text-xs">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div>
+                            <div class="text-[10px] opacity-75">Uscite Mese Corrente</div>
+                            <div class="text-sm font-bold text-rose-300" id="statUscite">€ 0,00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRAFICO -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center justify-between">
+                    <span>Ripartizione Finanziaria Mese</span>
+                    <i class="fas fa-chart-pie text-zinc-900 dark:text-white"></i>
+                </h3>
+                <div class="h-44">
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- AZIONI RAPIDE FINANZE -->
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="openModalTransaction('entrata')" class="bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 p-3 rounded-2xl flex flex-col items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold text-xs tap-active shadow-sm">
+                    <i class="fas fa-plus-circle text-lg mb-1"></i>
+                    + Entrata
+                </button>
+                <button onclick="openModalTransaction('uscita')" class="bg-rose-50/90 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 p-3 rounded-2xl flex flex-col items-center justify-center text-rose-700 dark:text-rose-400 font-bold text-xs tap-active shadow-sm">
+                    <i class="fas fa-minus-circle text-lg mb-1"></i>
+                    - Uscita
+                </button>
+                <button onclick="openModalTransaction('scadenza')" class="bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 p-3 rounded-2xl flex flex-col items-center justify-center text-amber-700 dark:text-amber-400 font-bold text-xs tap-active shadow-sm">
+                    <i class="fas fa-clock text-lg mb-1"></i>
+                    + Scadenza
+                </button>
+            </div>
+
+            <!-- MOVIMENTI E SCADENZE -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Movimenti Mese Corrente</h3>
+                    <span class="text-[11px] font-semibold text-gray-400" id="transCountLabel">0 voci</span>
+                </div>
+                <div id="transactionsList" class="space-y-2">
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: FIGLI & CALENDARIO UNICO PROMEMORIA -->
+        <section id="tab-figli" class="tab-content space-y-4 hidden">
+            <!-- TABS FIGLI -->
+            <div class="flex bg-gray-200/80 dark:bg-gray-800 p-1 rounded-2xl">
+                <button onclick="switchChild('simone')" id="child-tab-simone" class="child-tab-btn flex-1 py-2 text-xs font-bold rounded-xl transition-all bg-white dark:bg-theme-cardDark text-zinc-900 dark:text-white shadow-sm">
+                    👦 Simone
+                </button>
+                <button onclick="switchChild('elisa')" id="child-tab-elisa" class="child-tab-btn flex-1 py-2 text-xs font-bold rounded-xl transition-all text-gray-500">
+                    👧 Elisa
+                </button>
+                <button onclick="switchChild('vincenzo')" id="child-tab-vincenzo" class="child-tab-btn flex-1 py-2 text-xs font-bold rounded-xl transition-all text-gray-500">
+                    👦 Vincenzo
+                </button>
+            </div>
+
+            <!-- SCHEDA FIGLIO SELEZIONATO -->
+            <div id="childCardContainer" class="space-y-4">
+            </div>
+
+            <!-- CALENDARIO UNICO GRAFICO PROMEMORIA FAMIGLIA -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3 border border-indigo-500/20">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center justify-between">
+                    <span>📅 Calendario Unico Promemoria & Scadenze</span>
+                    <i class="fas fa-calendar-alt"></i>
+                </h3>
+                <p class="text-[11px] text-gray-500">Panoramica grafica unificata di tutti gli impegni dei ragazzi:</p>
+                <div id="unifiedCalendarView" class="space-y-2 pt-1">
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: GENITORI (PAPÀ & MÀMMA) - SCADENZE ANNUARIE & APPUNTAMENTI -->
+        <section id="tab-genitori" class="tab-content space-y-4 hidden">
+            <div class="bg-gradient-to-r from-purple-700 to-indigo-700 text-white rounded-3xl p-5 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <h2 class="text-lg font-bold font-brand tracking-wide">Agenda Genitori 👨‍👩‍👧</h2>
+                <p class="text-xs opacity-90">Calendario annuo, scadenze di coppia e appuntamenti da pagare</p>
+            </div>
+
+            <!-- AGGIUNGI SCADENZA GENITORI -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Nuovo Appuntamento o Scadenza</h3>
+                <form onsubmit="addParentDeadline(event)" class="space-y-2.5">
+                    <div>
+                        <input type="text" id="parentTitleInput" required placeholder="Es. Assicurazione Auto, Visita Medica..." class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-xs">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="date" id="parentDateInput" required class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        <input type="number" step="0.01" id="parentAmountInput" placeholder="Importo € (opzionale)" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2.5 rounded-xl tap-active">
+                        Aggiungi a Calendario Annuo
+                    </button>
+                </form>
+            </div>
+
+            <!-- LISTA SCADENZE & APPUNTAMENTI GENITORI -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Scadenze & Appuntamenti Papà e Mamma</h3>
+                    <span class="text-[11px] font-semibold text-gray-400" id="parentDeadlinesCount">0 scadenze</span>
+                </div>
+                <div id="parentDeadlinesList" class="space-y-2">
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: ALTRI PARENTI -->
+        <section id="tab-parenti" class="tab-content space-y-4 hidden">
+            <div class="flex bg-gray-200/80 dark:bg-gray-800 p-1 rounded-2xl overflow-x-auto scrollbar-none" id="relativesTabsContainer">
+            </div>
+
+            <div id="relativeCardContainer" class="space-y-4">
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm text-center space-y-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">Aggiungi nuovo membro alla scheda Parenti</h3>
+                <button onclick="addNewRelativePrompt()" class="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-4 py-2.5 rounded-xl text-xs font-bold tap-active shadow-sm">
+                    <i class="fas fa-user-plus mr-1"></i> Aggiungi Parente
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 5: LISTA SPESA TAP & GO -->
+        <section id="tab-spesa" class="tab-content space-y-4 hidden">
+            <div class="bg-amber-500 text-white rounded-2xl p-4 shadow-md flex justify-between items-center">
+                <div>
+                    <h2 class="text-base font-bold font-brand tracking-wide">Lista Spesa Tap & Go 🛒</h2>
+                    <p class="text-xs opacity-90">Gestisci quantità e genera il foglio per WhatsApp</p>
+                </div>
+                <button onclick="clearActiveGrocery()" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-lg tap-active">
+                    Pulisci Lista
+                </button>
+            </div>
+
+            <div class="flex space-x-2">
+                <input type="text" id="newGroceryInput" placeholder="Aggiungi nuovo prodotto..." class="flex-1 glass-card rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <input type="number" id="newGroceryQty" value="1" min="1" class="w-16 glass-card rounded-xl px-2 py-2 text-sm text-center">
+                <button onclick="addCustomGrocery()" class="bg-amber-500 text-white px-4 py-2 rounded-xl text-sm font-bold tap-active">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <div id="groceryCategories" class="space-y-4">
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400">📝 Foglio Testo Lista Spesa</h3>
+                    <button onclick="copyGroceryText()" class="text-xs bg-amber-500 text-white px-3 py-1 rounded-lg font-bold tap-active flex items-center space-x-1">
+                        <i class="fas fa-copy"></i>
+                        <span>Copia per WhatsApp</span>
+                    </button>
+                </div>
+                <textarea id="groceryTextArea" readonly class="w-full h-32 p-3 bg-gray-50/80 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-mono resize-none focus:outline-none" placeholder="La tua lista attiva apparirà qui..."></textarea>
+            </div>
+        </section>
+
+        <!-- TAB 6: PASSATEMPO / GIOCHI -->
+        <section id="tab-giochi" class="tab-content space-y-4 hidden">
+            <div class="bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-3xl p-5 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <h2 class="text-lg font-bold font-brand tracking-wide">Area Passatempo 🎮</h2>
+                <p class="text-xs opacity-90">Giochi veloci per quando sei in attesa</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Tris Familiare (X vs O)</h3>
+                <div id="ticTacToeStatus" class="text-xs font-bold text-pink-600 dark:text-pink-400">Tocca una casella per iniziare!</div>
+                <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto pt-1">
+                    <button onclick="makeTicMove(0)" id="tictac-0" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(1)" id="tictac-1" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(2)" id="tictac-2" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(3)" id="tictac-3" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(4)" id="tictac-4" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(5)" id="tictac-5" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(6)" id="tictac-6" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(7)" id="tictac-7" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                    <button onclick="makeTicMove(8)" id="tictac-8" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
+                </div>
+                <button onclick="resetTicTacToe()" class="text-xs bg-gray-200 dark:bg-gray-700 font-bold px-4 py-2 rounded-xl tap-active mt-2">Ricomincia Tris</button>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Indovina il Numero (1 - 50)</h3>
+                <p id="guessStatus" class="text-xs text-gray-500">Pensa a un numero e prova a indovinarlo!</p>
+                <div class="flex space-x-2 max-w-xs mx-auto">
+                    <input type="number" id="guessInput" min="1" max="50" placeholder="Tuo numero..." class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-xs text-center font-bold">
+                    <button onclick="checkNumberGuess()" class="bg-pink-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs tap-active">Prova</button>
+                </div>
+                <button onclick="resetNumberGuess()" class="text-xs text-gray-400 hover:text-gray-600 underline">Nuova Partita</button>
+            </div>
+        </section>
+
+        <!-- TAB 7: OPZIONI, ARCHIVIO EXCEL & AMMINISTRAZIONE -->
+        <section id="tab-settings" class="tab-content space-y-4 hidden">
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <h2 class="text-base font-bold border-b border-gray-200 dark:border-gray-800 pb-2 flex items-center justify-between">
+                    <span>Skin Astratte & Temi Personalizzati</span>
+                    <i class="fas fa-paint-brush text-indigo-500"></i>
+                </h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Scegli una grafica e una skin astratta per la tua app:</p>
+
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button onclick="setAppTheme('bw')" class="p-3.5 rounded-2xl bg-black border-2 border-white text-white font-bold text-xs flex flex-col items-center justify-center tap-active shadow-md">
+                        <i class="fas fa-adjust text-lg mb-1"></i>
+                        <span>Bianco & Nero</span>
+                        <span class="text-[9px] font-normal opacity-70">Minimal Monochrome</span>
+                    </button>
+                    <button onclick="setAppTheme('abstract-geo')" class="p-3.5 rounded-2xl bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 text-white font-bold text-xs flex flex-col items-center justify-center tap-active shadow-md border border-indigo-400/30">
+                        <i class="fas fa-shapes text-lg mb-1"></i>
+                        <span>Geometria Astratta</span>
+                        <span class="text-[9px] font-normal opacity-70">Sfumature & Cerchi</span>
+                    </button>
+                    <button onclick="setAppTheme('fluid-waves')" class="p-3.5 rounded-2xl bg-gradient-to-br from-sky-900 via-slate-900 to-teal-900 text-white font-bold text-xs flex flex-col items-center justify-center tap-active shadow-md border border-sky-400/30">
+                        <i class="fas fa-water text-lg mb-1"></i>
+                        <span>Onde Fluide</span>
+                        <span class="text-[9px] font-normal opacity-70">Art Modern & Glass</span>
+                    </button>
+                    <button onclick="setAppTheme('memphis')" class="p-3.5 rounded-2xl bg-pink-100 border-2 border-pink-500 text-pink-700 font-bold text-xs flex flex-col items-center justify-center tap-active shadow-md">
+                        <i class="fas fa-th-large text-lg mb-1"></i>
+                        <span>Memphis Mosaico</span>
+                        <span class="text-[9px] font-normal opacity-70">Pattern Astratto</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <h2 class="text-base font-bold border-b border-gray-200 dark:border-gray-800 pb-2 flex items-center justify-between">
+                    <span>📊 Archivio Resoconti Mensili (Excel)</span>
+                    <i class="fas fa-file-excel text-emerald-600"></i>
+                </h2>
+                <p class="text-xs text-gray-500">I mesi passati vengono archiviati automaticamente. Puoi scaricare o eliminare i singoli report:</p>
+                <div id="monthlyArchivesList" class="space-y-2 pt-1">
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-4">
+                <h2 class="text-base font-bold border-b border-gray-200 dark:border-gray-800 pb-2">Profilo Famiglia</h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500">Nome Visualizzato Famiglia</label>
+                        <input type="text" id="settingFamilyName" value="SALVAGGIO family" onchange="saveFamilyName(this.value)" class="w-full mt-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-sm font-brand text-base">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500">Avatar Famiglia</label>
+                        <div class="flex space-x-2 mt-2">
+                            <button onclick="setAvatar('👨‍👩‍👦')" class="text-2xl p-2 bg-gray-100 dark:bg-gray-800 rounded-xl tap-active">👨‍👩‍👦</button>
+                            <button onclick="setAvatar('🏠')" class="text-2xl p-2 bg-gray-100 dark:bg-gray-800 rounded-xl tap-active">🏠</button>
+                            <button onclick="setAvatar('❤️')" class="text-2xl p-2 bg-gray-100 dark:bg-gray-800 rounded-xl tap-active">❤️</button>
+                            <button onclick="setAvatar('👑')" class="text-2xl p-2 bg-gray-100 dark:bg-gray-800 rounded-xl tap-active">👑</button>
+                            <button onclick="setAvatar('⭐')" class="text-2xl p-2 bg-gray-100 dark:bg-gray-800 rounded-xl tap-active">⭐</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm border-2 border-indigo-500/20 space-y-4">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <h2 class="text-base font-bold text-indigo-600 dark:text-indigo-400 flex items-center space-x-2">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Area Gestione Membri & Admin</span>
+                    </h2>
+                    <span class="text-[10px] bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 font-extrabold px-2 py-0.5 rounded-md">ADMIN</span>
+                </div>
+
+                <div id="adminPinBlock" class="space-y-3 bg-indigo-50/80 dark:bg-indigo-950/30 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800">
+                    <p class="text-xs text-indigo-800 dark:text-indigo-300 font-medium">Inserisci PIN Amministratore (PIN: <strong class="underline">1234</strong>):</p>
+                    <div class="flex space-x-2">
+                        <input type="password" id="inputAdminPin" maxlength="6" placeholder="PIN Admin..." class="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-sm text-center tracking-widest font-bold">
+                        <button onclick="unlockAdminPanel()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold tap-active">
+                            Sblocca
+                        </button>
+                    </div>
+                </div>
+
+                <div id="adminUnlockedContent" class="space-y-4 hidden">
+                    <div class="flex justify-between items-center bg-indigo-50 dark:bg-indigo-950/50 p-3 rounded-xl border border-indigo-200 dark:border-indigo-800">
+                        <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300"><i class="fas fa-check-circle"></i> Pannello Admin Attivo</span>
+                        <button onclick="lockAdminPanel()" class="bg-rose-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold tap-active flex items-center space-x-1">
+                            <i class="fas fa-lock"></i>
+                            <span>Blocca Admin</span>
+                        </button>
+                    </div>
+
+                    <form onsubmit="saveUserAccountAdmin(event)" class="space-y-3 bg-gray-50/80 dark:bg-gray-800/60 p-3.5 rounded-2xl border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Modifica Nickname e Password Utente</h3>
+                        <div>
+                            <label class="text-[11px] text-gray-500 font-semibold">Seleziona Utente</label>
+                            <select id="adminUserSelect" onchange="loadSelectedUserToEdit()" class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-gray-500 font-semibold">Nickname Visualizzato</label>
+                            <input type="text" id="adminEditNickname" required placeholder="Inserisci Nickname..." class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-gray-500 font-semibold">Nuova Password / PIN</label>
+                            <input type="password" id="adminEditPassword" placeholder="Lascia vuoto se inalterata" class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2.5 rounded-xl tap-active transition-colors">
+                            Aggiorna Dati Membro
+                        </button>
+                    </form>
+
+                    <form onsubmit="addNewUserAdmin(event)" class="space-y-3 bg-gray-50/80 dark:bg-gray-800/60 p-3.5 rounded-2xl border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">+ Crea Nuovo Membro Famiglia</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-[11px] text-gray-500 font-semibold">Nickname</label>
+                                <input type="text" id="adminNewUserNick" required placeholder="Es. Marco" class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-gray-500 font-semibold">Ruolo</label>
+                                <select id="adminNewUserRole" class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                                    <option value="Membro">Membro Famiglia</option>
+                                    <option value="Figlio">Figlio / Ragazzo</option>
+                                    <option value="Admin">Co-Amministratore</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-gray-500 font-semibold">Password o PIN</label>
+                            <input type="password" id="adminNewUserPass" required placeholder="Es. 1234" class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl tap-active transition-colors">
+                            Crea e Abilita Membro
+                        </button>
+                    </form>
+
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Membri Abilitati</h3>
+                        <div id="usersListAdmin" class="space-y-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <h2 class="text-base font-bold border-b border-gray-200 dark:border-gray-800 pb-2">Gestione Dati & Backup 💾</h2>
+                <div class="space-y-2 pt-2">
+                    <button onclick="exportJSONBackup()" class="w-full bg-zinc-900 dark:bg-white dark:text-zinc-900 text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 tap-active">
+                        <i class="fas fa-download"></i>
+                        <span>Esporta Backup Dati Completo (JSON)</span>
+                    </button>
+                    
+                    <button onclick="exportCSVTransactions()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 tap-active">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Esporta Movimenti in Excel (CSV)</span>
+                    </button>
+
+                    <label class="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 cursor-pointer tap-active">
+                        <i class="fas fa-upload"></i>
+                        <span>Ripristina Backup</span>
+                        <input type="file" id="importFileInput" onchange="importJSONBackup(event)" accept=".json" class="hidden">
+                    </label>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- NAVIGATION BAR BOTTOM -->
+    <nav class="fixed bottom-0 left-0 right-0 glass-card border-t border-gray-200 dark:border-gray-800 z-40 px-2 py-2">
+        <div class="max-w-2xl mx-auto flex justify-around items-center">
+            <button onclick="showTab('finanze')" id="nav-finanze" class="nav-btn flex flex-col items-center text-zinc-900 dark:text-white">
+                <i class="fas fa-wallet text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Finanze</span>
+            </button>
+            <button onclick="showTab('figli')" id="nav-figli" class="nav-btn flex flex-col items-center text-gray-400">
+                <i class="fas fa-child text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Ragazzi</span>
+            </button>
+            <button onclick="showTab('genitori')" id="nav-genitori" class="nav-btn flex flex-col items-center text-gray-400">
+                <i class="fas fa-user-friends text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Genitori</span>
+            </button>
+            <button onclick="showTab('parenti')" id="nav-parenti" class="nav-btn flex flex-col items-center text-gray-400">
+                <i class="fas fa-users text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Parenti</span>
+            </button>
+            <button onclick="showTab('spesa')" id="nav-spesa" class="nav-btn flex flex-col items-center text-gray-400">
+                <i class="fas fa-shopping-cart text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Spesa</span>
+            </button>
+            <button onclick="showTab('giochi')" id="nav-giochi" class="nav-btn flex flex-col items-center text-gray-400">
+                <i class="fas fa-gamepad text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Giochi</span>
+            </button>
+            <button onclick="showTab('settings')" id="nav-settings" class="nav-btn flex flex-col items-center text-gray-400">
+                <i class="fas fa-sliders-h text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Opzioni</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MODALE TRANSAZIONE -->
+    <div id="modalTransaction" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white dark:bg-theme-cardDark w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800">
+            <div class="flex justify-between items-center border-b border-gray-100 dark:border-gray-800 pb-3">
+                <h3 class="text-base font-bold" id="modalTransTitle">Aggiungi Movimento</h3>
+                <button onclick="closeModalTransaction()" class="text-gray-400 text-lg"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="transForm" onsubmit="saveTransaction(event)" class="space-y-3">
+                <input type="hidden" id="transEditId" value="">
+                <input type="hidden" id="transType" value="uscita">
+                <div>
+                    <label class="text-xs font-semibold text-gray-500">Descrizione</label>
+                    <input type="text" id="transDesc" required placeholder="Es. Spesa, Bolletta Luce..." class="w-full mt-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500">Importo (€)</label>
+                        <input type="number" step="0.01" id="transAmount" required placeholder="0.00" class="w-full mt-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500">Data Scadenza / Reg.</label>
+                        <input type="date" id="transDate" required class="w-full mt-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-gray-500">Categoria</label>
+                    <select id="transCategory" class="w-full mt-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-sm">
+                        <option value="Casa">🏠 Casa & Bollette</option>
+                        <option value="Spesa">🛒 Spesa Supermercato</option>
+                        <option value="Salute">🩺 Salute & Dottori</option>
+                        <option value="Scuola">📚 Scuola & Figli</option>
+                        <option value="Auto">🚗 Auto & Trasporti</option>
+                        <option value="Stipendio">💶 Stipendio / Entrata</option>
+                        <option value="Altro">📦 Altro</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 py-3 rounded-xl font-bold text-sm tap-active mt-2">
+                    Salva Movimento
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let appData = {
+            activeUser: null,
+            transactions: [
+                { id: '1', type: 'entrata', desc: 'Stipendio Mese', amount: 2100.00, date: '2026-10-01', category: 'Stipendio', status: 'Saldato' },
+                { id: '2', type: 'uscita', desc: 'Spesa Settimanale', amount: 110.50, date: '2026-10-05', category: 'Spesa', status: 'Saldato' },
+                { id: '3', type: 'scadenza', desc: 'Bolletta Luce & Gas', amount: 145.00, date: '2026-10-25', category: 'Casa', status: 'In Scadenza' }
+            ],
+            monthlyArchives: [],
+            lastActiveMonth: new Date().toISOString().slice(0, 7),
+            children: {
+                simone: {
+                    name: 'Simone',
+                    doctors: [
+                        { role: 'Pediatra', name: 'Dr. Rossi', phone: '+393331234567' },
+                        { role: 'Dentista', name: 'Dr. Bianchi', phone: '+393479876543' }
+                    ],
+                    reminders: [
+                        { id: 'r1', title: 'Visita Controllo Pediatra', date: '2026-11-05', done: false }
+                    ]
+                },
+                elisa: {
+                    name: 'Elisa',
+                    doctors: [{ role: 'Pediatra', name: 'Dr. Rossi', phone: '+393331234567' }],
+                    reminders: [{ id: 'r2', title: 'Quota Gita Scolastica', date: '2026-10-20', done: false }]
+                },
+                vincenzo: {
+                    name: 'Vincenzo',
+                    doctors: [{ role: 'Pediatra', name: 'Dr. Rossi', phone: '+393331234567' }],
+                    reminders: [{ id: 'r3', title: 'Iscrizione Corso Calcio', date: '2026-10-15', done: true }]
+                }
+            },
+            relatives: {
+                zio_giovanni: {
+                    name: 'Zio Giovanni',
+                    doctors: [{ role: 'Medico Base', name: 'Dr. Nobile', phone: '+393389876543' }],
+                    reminders: [{ id: 'rel_1', title: 'Visita Cardiologo', date: '2026-11-12', done: false }]
+                },
+                nonna_maria: {
+                    name: 'Nonna Maria',
+                    doctors: [{ role: 'Geriatra', name: 'Dr. Colombo', phone: '+393351122334' }],
+                    reminders: [{ id: 'rel_2', title: 'Controllo Pressione', date: '2026-10-18', done: true }]
+                }
+            },
+            parentDeadlines: [
+                { id: 'pd_1', title: 'Assicurazione Auto', date: '2026-11-30', amount: 450.00 },
+                { id: 'pd_2', title: 'Bollo Auto', date: '2026-12-15', amount: 180.00 }
+            ],
+            grocery: [
+                { category: 'Freschi', items: [{ name: 'Latte', qty: 2, active: true }, { name: 'Formaggio', qty: 1, active: false }, { name: 'Uova', qty: 1, active: true }] },
+                { category: 'Ortofrutta', items: [{ name: 'Mele', qty: 1, active: false }, { name: 'Insalata', qty: 1, active: true }, { name: 'Pomodori', qty: 2, active: false }] },
+                { category: 'Dispensa', items: [{ name: 'Pasta', qty: 3, active: true }, { name: 'Riso', qty: 1, active: false }, { name: 'Passata', qty: 4, active: true }] }
+            ],
+            settings: {
+                avatar: '👨‍👩‍👦',
+                name: 'SALVAGGIO family',
+                theme: 'bw',
+                adminPin: '1234'
+            },
+            users: [
+                { id: 'u1', nickname: 'Papà (Admin)', role: 'Admin', pass: '1234', status: 'Attivo' },
+                { id: 'u2', nickname: 'Mamma', role: 'Membro', pass: '1234', status: 'Attivo' }
+            ]
+        };
+
+        let currentChild = 'simone';
+        let currentRelative = 'zio_giovanni';
+        let myChart = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadLocalData();
+            checkMonthlyRollover();
+            applyTheme(appData.settings.theme || 'bw');
+            populateLoginUserDropdown();
+            initChart();
+
+            if (!appData.activeUser) {
+                document.getElementById('welcomeLoginOverlay').classList.remove('hidden', 'opacity-0');
+            } else {
+                document.getElementById('welcomeLoginOverlay').classList.add('hidden');
+                renderAll();
+            }
+
+            document.getElementById('transDate').value = new Date().toISOString().split('T')[0];
+        });
+
+        function saveLocalData() {
+            localStorage.setItem('famiglia_app_data_v5', JSON.stringify(appData));
+            renderAll();
+        }
+
+        function loadLocalData() {
+            const saved = localStorage.getItem('famiglia_app_data_v5');
+            if (saved) {
+                try { appData = JSON.parse(saved); } catch(e) {}
+            }
+        }
+
+        function checkMonthlyRollover() {
+            const currentMonthStr = new Date().toISOString().slice(0, 7);
+            if (!appData.lastActiveMonth) {
+                appData.lastActiveMonth = currentMonthStr;
+                return;
+            }
+
+            if (appData.lastActiveMonth !== currentMonthStr) {
+                if (appData.transactions && appData.transactions.length > 0) {
+                    const archiveItem = {
+                        id: 'arch_' + Date.now(),
+                        monthLabel: appData.lastActiveMonth,
+                        transactions: [...appData.transactions]
+                    };
+                    if (!appData.monthlyArchives) appData.monthlyArchives = [];
+                    appData.monthlyArchives.push(archiveItem);
+                }
+                appData.transactions = [];
+                appData.lastActiveMonth = currentMonthStr;
+                saveLocalData();
+            }
+        }
+
+        function populateLoginUserDropdown() {
+            const select = document.getElementById('loginUserSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            appData.users.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u.id;
+                opt.innerText = `${u.nickname} (${u.role})`;
+                select.appendChild(opt);
+            });
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const selectedId = document.getElementById('loginUserSelect').value;
+            const enteredPass = document.getElementById('loginPasswordInput').value.trim();
+
+            const user = appData.users.find(u => u.id === selectedId);
+            if (user && user.pass === enteredPass) {
+                appData.activeUser = user;
+                saveLocalData();
+
+                const overlay = document.getElementById('welcomeLoginOverlay');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+
+                document.getElementById('loginPasswordInput').value = '';
+                renderAll();
+            } else {
+                alert('Password o PIN non corretto! Riprova.');
+            }
+        }
+
+        function performAppLogout() {
+            appData.activeUser = null;
+            saveLocalData();
+            populateLoginUserDropdown();
+
+            const overlay = document.getElementById('welcomeLoginOverlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => { overlay.classList.remove('opacity-0'); }, 10);
+        }
+
+        function renderAll() {
+            renderFinances();
+            renderChildCard();
+            renderUnifiedCalendar();
+            renderParentDeadlines();
+            renderRelativesTabs();
+            renderRelativeCard();
+            renderGrocery();
+            renderMonthlyArchives();
+            renderAdminUserSelect();
+            renderAdminUsersList();
+            updateHeader();
+        }
+
+        function updateHeader() {
+            document.getElementById('userAvatar').innerText = appData.settings.avatar || '👨‍👩‍👦';
+            document.getElementById('headerTitle').innerText = appData.settings.name || 'SALVAGGIO family';
+            if (appData.activeUser) {
+                document.getElementById('activeUserBadge').innerText = appData.activeUser.nickname;
+            }
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-zinc-900', 'dark:text-white');
+                btn.classList.add('text-gray-400');
+            });
+            const navBtn = document.getElementById(`nav-${tabName}`);
+            navBtn.classList.add('text-zinc-900', 'dark:text-white');
+            navBtn.classList.remove('text-gray-400');
+        }
+
+        function setAppTheme(themeName) {
+            appData.settings.theme = themeName;
+            applyTheme(themeName);
+            saveLocalData();
+        }
+
+        function applyTheme(themeName) {
+            document.body.classList.remove('theme-bw', 'theme-abstract-geo', 'theme-fluid-waves', 'theme-memphis');
+            document.body.classList.add(`theme-${themeName}`);
+        }
+
+        // FINANZE
+        function renderFinances() {
+            let entrate = 0;
+            let uscite = 0;
+
+            appData.transactions.forEach(t => {
+                if (t.type === 'entrata') entrate += parseFloat(t.amount);
+                if (t.type === 'uscita') uscite += parseFloat(t.amount);
+            });
+
+            const giacenza = entrate - uscite;
+
+            document.getElementById('statGiacenza').innerText = `€ ${giacenza.toFixed(2)}`;
+            document.getElementById('statEntrate').innerText = `€ ${entrate.toFixed(2)}`;
+            document.getElementById('statUscite').innerText = `€ ${uscite.toFixed(2)}`;
+            document.getElementById('transCountLabel').innerText = `${appData.transactions.length} voci`;
+
+            renderTransactionsList();
+            updateChart(entrate, uscite, giacenza);
+        }
+
+        function renderTransactionsList() {
+            const container = document.getElementById('transactionsList');
+            container.innerHTML = '';
+
+            if (appData.transactions.length === 0) {
+                container.innerHTML = '<div class="text-center text-xs text-gray-400 py-4">Nessun movimento in questo mese.</div>';
+                return;
+            }
+
+            appData.transactions.slice().reverse().forEach(t => {
+                const isEntrata = t.type === 'entrata';
+                const isScadenza = t.type === 'scadenza';
+
+                const icon = isEntrata ? 'fa-arrow-down text-emerald-500' : (isScadenza ? 'fa-clock text-amber-500' : 'fa-arrow-up text-rose-500');
+                const badgeBg = isEntrata ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' : (isScadenza ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300');
+
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-3 rounded-2xl bg-white/60 dark:bg-gray-800/60 text-xs shadow-sm border border-gray-100 dark:border-gray-700';
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-white dark:bg-theme-cardDark flex items-center justify-center shadow-sm">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">${t.desc}</div>
+                            <div class="text-[10px] text-gray-400">${t.date} • ${t.category}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right">
+                            <div class="font-extrabold text-xs ${isEntrata ? 'text-emerald-500' : 'text-gray-800 dark:text-gray-200'}">
+                                ${isEntrata ? '+' : '-'}€ ${parseFloat(t.amount).toFixed(2)}
+                            </div>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded-md font-semibold ${badgeBg}">${t.status}</span>
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <button onclick="editTransaction('${t.id}')" title="Modifica" class="p-1.5 bg-gray-100 dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 rounded-lg tap-active text-[11px]">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button onclick="deleteTransaction('${t.id}')" title="Elimina" class="p-1.5 bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-300 rounded-lg tap-active text-[11px]">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function openModalTransaction(type, editId = null) {
+            document.getElementById('transEditId').value = editId || '';
+            document.getElementById('transType').value = type;
+
+            if (editId) {
+                const trans = appData.transactions.find(t => t.id === editId);
+                if (trans) {
+                    document.getElementById('modalTransTitle').innerText = 'Modifica Movimento';
+                    document.getElementById('transDesc').value = trans.desc;
+                    document.getElementById('transAmount').value = trans.amount;
+                    document.getElementById('transDate').value = trans.date;
+                    document.getElementById('transCategory').value = trans.category;
+                }
+            } else {
+                document.getElementById('modalTransTitle').innerText = type === 'entrata' ? 'Nuova Entrata' : (type === 'uscita' ? 'Nuova Uscita' : 'Nuova Scadenza');
+                document.getElementById('transForm').reset();
+                document.getElementById('transDate').value = new Date().toISOString().split('T')[0];
+            }
+
+            document.getElementById('modalTransaction').classList.remove('hidden');
+        }
+
+        function closeModalTransaction() {
+            document.getElementById('modalTransaction').classList.add('hidden');
+        }
+
+        function saveTransaction(e) {
+            e.preventDefault();
+            const editId = document.getElementById('transEditId').value;
+            const type = document.getElementById('transType').value;
+            const desc = document.getElementById('transDesc').value;
+            const amount = parseFloat(document.getElementById('transAmount').value);
+            const date = document.getElementById('transDate').value;
+            const category = document.getElementById('transCategory').value;
+
+            if (editId) {
+                const trans = appData.transactions.find(t => t.id === editId);
+                if (trans) {
+                    trans.desc = desc;
+                    trans.amount = amount;
+                    trans.date = date;
+                    trans.category = category;
+                }
+            } else {
+                appData.transactions.push({
+                    id: Date.now().toString(),
+                    type, desc, amount, date, category,
+                    status: type === 'scadenza' ? 'In Scadenza' : 'Saldato'
+                });
+            }
+
+            saveLocalData();
+            closeModalTransaction();
+        }
+
+        function editTransaction(id) {
+            const trans = appData.transactions.find(t => t.id === id);
+            if (trans) openModalTransaction(trans.type, id);
+        }
+
+        function deleteTransaction(id) {
+            if (confirm('Vuoi davvero cancellare questo movimento?')) {
+                appData.transactions = appData.transactions.filter(t => t.id !== id);
+                saveLocalData();
+            }
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Giacenza', 'Uscite Totali'],
+                    datasets: [{
+                        data: [1, 1],
+                        backgroundColor: ['#10B981', '#EF4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }
+                }
+            });
+        }
+
+        function updateChart(entrate, uscite, giacenza) {
+            if (!myChart) return;
+            myChart.data.datasets[0].data = [Math.max(0, giacenza), uscite];
+            myChart.update();
+        }
+
+        // SCADENZE ANNUARIE GENITORI
+        function addParentDeadline(e) {
+            e.preventDefault();
+            const title = document.getElementById('parentTitleInput').value.trim();
+            const date = document.getElementById('parentDateInput').value;
+            const amount = parseFloat(document.getElementById('parentAmountInput').value) || 0;
+
+            if (!title || !date) return;
+
+            if (!appData.parentDeadlines) appData.parentDeadlines = [];
+            appData.parentDeadlines.push({
+                id: 'pd_' + Date.now(),
+                title, date, amount
+            });
+
+            saveLocalData();
+            document.getElementById('parentTitleInput').value = '';
+            document.getElementById('parentAmountInput').value = '';
+        }
+
+        function renderParentDeadlines() {
+            const container = document.getElementById('parentDeadlinesList');
+            const countLabel = document.getElementById('parentDeadlinesCount');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!appData.parentDeadlines) appData.parentDeadlines = [];
+            countLabel.innerText = `${appData.parentDeadlines.length} scadenze`;
+
+            if (appData.parentDeadlines.length === 0) {
+                container.innerHTML = '<div class="text-xs text-gray-400 text-center py-2">Nessuna scadenza genitoriale registrata.</div>';
+                return;
+            }
+
+            appData.parentDeadlines.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            appData.parentDeadlines.forEach(pd => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-3 rounded-xl bg-white/70 dark:bg-gray-800 text-xs border border-indigo-100 dark:border-indigo-900/30 shadow-sm';
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">${pd.title}</div>
+                            <div class="text-[10px] text-gray-400">Scadenza: ${pd.date}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right">
+                            <div class="font-extrabold text-xs text-indigo-600 dark:text-indigo-400">€ ${pd.amount.toFixed(2)}</div>
+                        </div>
+                        <button onclick="deleteParentDeadline('${pd.id}')" class="p-1.5 bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-300 rounded-lg tap-active text-[11px]">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function deleteParentDeadline(id) {
+            if (confirm('Vuoi cancellare questa scadenza?')) {
+                appData.parentDeadlines = appData.parentDeadlines.filter(p => p.id !== id);
+                saveLocalData();
+            }
+        }
+
+        // SEZIONE ALTRI PARENTI
+        function renderRelativesTabs() {
+            const container = document.getElementById('relativesTabsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!appData.relatives) appData.relatives = {};
+
+            Object.keys(appData.relatives).forEach(key => {
+                const rel = appData.relatives[key];
+                const isActive = (currentRelative === key);
+
+                const btn = document.createElement('button');
+                btn.onclick = () => switchRelative(key);
+                btn.className = `flex-1 py-2 px-3 text-xs font-bold rounded-xl whitespace-nowrap transition-all ${isActive ? 'bg-white dark:bg-theme-cardDark text-zinc-900 dark:text-white shadow-sm' : 'text-gray-500'}`;
+                btn.innerText = `👤 ${rel.name}`;
+                container.appendChild(btn);
+            });
+        }
+
+        function switchRelative(relKey) {
+            currentRelative = relKey;
+            renderRelativesTabs();
+            renderRelativeCard();
+        }
+
+        function renderRelativeCard() {
+            const container = document.getElementById('relativeCardContainer');
+            if (!container) return;
+
+            if (!appData.relatives || !appData.relatives[currentRelative]) {
+                container.innerHTML = '<div class="text-xs text-gray-400 text-center py-4">Seleziona un parente.</div>';
+                return;
+            }
+
+            const rel = appData.relatives[currentRelative];
+
+            let doctorsHtml = rel.doctors.map(d => `
+                <div class="flex justify-between items-center bg-white/60 dark:bg-gray-800 p-3 rounded-xl shadow-sm">
+                    <div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">${d.role}</div>
+                        <div class="text-sm font-bold">${d.name}</div>
+                    </div>
+                    <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Chiama</span>
+                    </a>
+                </div>
+            `).join('');
+
+            let remindersHtml = rel.reminders.map(r => `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/60 dark:bg-gray-800 text-xs shadow-sm">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleRelativeReminder('${currentRelative}', '${r.id}')" class="w-4 h-4 rounded text-indigo-600">
+                        <span class="${r.done ? 'line-through text-gray-400' : 'font-semibold'}">${r.title}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] text-gray-400">${r.date}</span>
+                        <button onclick="deleteRelativeReminder('${currentRelative}', '${r.id}')" class="text-rose-500 hover:text-rose-700 p-1">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold flex items-center justify-between">
+                        <span>Contatti Utili & Dottori (${rel.name})</span>
+                        <i class="fas fa-user-md text-indigo-500"></i>
+                    </h3>
+                    <div class="space-y-2">${doctorsHtml}</div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold">Promemoria & Visite (${rel.name})</h3>
+                        <button onclick="addRelativeReminderPrompt('${currentRelative}')" class="text-xs text-indigo-500 font-bold">+ Aggiungi</button>
+                    </div>
+                    <div class="space-y-2">${remindersHtml}</div>
+                </div>
+            `;
+        }
+
+        function addNewRelativePrompt() {
+            const name = prompt('Inserisci il nome del Parente:');
+            if (name) {
+                const key = 'rel_' + Date.now();
+                if (!appData.relatives) appData.relatives = {};
+                appData.relatives[key] = {
+                    name: name.trim(),
+                    doctors: [{ role: 'Medico di Base', name: 'Da inserire', phone: '+390000000000' }],
+                    reminders: []
+                };
+                currentRelative = key;
+                saveLocalData();
+            }
+        }
+
+        function toggleRelativeReminder(relKey, id) {
+            const rel = appData.relatives[relKey];
+            const rem = rel.reminders.find(r => r.id === id);
+            if (rem) rem.done = !rem.done;
+            saveLocalData();
+        }
+
+        function deleteRelativeReminder(relKey, id) {
+            if (confirm('Vuoi cancellare questo promemoria?')) {
+                const rel = appData.relatives[relKey];
+                rel.reminders = rel.reminders.filter(r => r.id !== id);
+                saveLocalData();
+            }
+        }
+
+        function addRelativeReminderPrompt(relKey) {
+            const title = prompt('Inserisci Promemoria per il parente:');
+            if (title) {
+                appData.relatives[relKey].reminders.push({
+                    id: Date.now().toString(),
+                    title,
+                    date: new Date().toISOString().split('T')[0],
+                    done: false
+                });
+                saveLocalData();
+            }
+        }
+
+        // FIGLI & CALENDARIO UNICO
+        function switchChild(childKey) {
+            currentChild = childKey;
+            document.querySelectorAll('.child-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'dark:bg-theme-cardDark', 'text-zinc-900', 'dark:text-white', 'shadow-sm');
+                btn.classList.add('text-gray-400');
+            });
+            const activeBtn = document.getElementById(`child-tab-${childKey}`);
+            activeBtn.classList.add('bg-white', 'dark:bg-theme-cardDark', 'text-zinc-900', 'dark:text-white', 'shadow-sm');
+            activeBtn.classList.remove('text-gray-400');
+
+            renderChildCard();
+        }
+
+        function renderChildCard() {
+            const child = appData.children[currentChild];
+            const container = document.getElementById('childCardContainer');
+
+            let doctorsHtml = child.doctors.map(d => `
+                <div class="flex justify-between items-center bg-white/60 dark:bg-gray-800 p-3 rounded-xl shadow-sm">
+                    <div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">${d.role}</div>
+                        <div class="text-sm font-bold">${d.name}</div>
+                    </div>
+                    <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Chiama</span>
+                    </a>
+                </div>
+            `).join('');
+
+            let remindersHtml = child.reminders.map(r => `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/60 dark:bg-gray-800 text-xs shadow-sm">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleReminder('${currentChild}', '${r.id}')" class="w-4 h-4 rounded text-indigo-600">
+                        <span class="${r.done ? 'line-through text-gray-400' : 'font-semibold'}">${r.title}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] text-gray-400">${r.date}</span>
+                        <button onclick="deleteReminder('${currentChild}', '${r.id}')" class="text-rose-500 hover:text-rose-700 p-1">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold flex items-center justify-between">
+                        <span>Contatti Utili & Dottori (${child.name})</span>
+                        <i class="fas fa-user-md text-indigo-500"></i>
+                    </h3>
+                    <div class="space-y-2">${doctorsHtml}</div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold">Promemoria & Scadenze (${child.name})</h3>
+                        <button onclick="addReminderPrompt('${currentChild}')" class="text-xs text-indigo-500 font-bold">+ Aggiungi</button>
+                    </div>
+                    <div class="space-y-2">${remindersHtml}</div>
+                </div>
+            `;
+        }
+
+        function toggleReminder(childKey, id) {
+            const child = appData.children[childKey];
+            const rem = child.reminders.find(r => r.id === id);
+            if (rem) rem.done = !rem.done;
+            saveLocalData();
+        }
+
+        function deleteReminder(childKey, id) {
+            if (confirm('Vuoi cancellare questo promemoria?')) {
+                const child = appData.children[childKey];
+                child.reminders = child.reminders.filter(r => r.id !== id);
+                saveLocalData();
+            }
+        }
+
+        function addReminderPrompt(childKey) {
+            const title = prompt('Inserisci Promemoria:');
+            if (title) {
+                appData.children[childKey].reminders.push({
+                    id: Date.now().toString(),
+                    title,
+                    date: new Date().toISOString().split('T')[0],
+                    done: false
+                });
+                saveLocalData();
+            }
+        }
+
+        function renderUnifiedCalendar() {
+            const container = document.getElementById('unifiedCalendarView');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let allReminders = [];
+            Object.keys(appData.children).forEach(key => {
+                const ch = appData.children[key];
+                ch.reminders.forEach(r => {
+                    allReminders.push({ ...r, childName: ch.name });
+                });
+            });
+
+            allReminders.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (allReminders.length === 0) {
+                container.innerHTML = '<div class="text-xs text-gray-400 text-center py-2">Nessun promemoria attivo in calendario.</div>';
+                return;
+            }
+
+            allReminders.forEach(rem => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between p-2.5 rounded-xl bg-white/70 dark:bg-gray-800 text-xs border border-indigo-100 dark:border-indigo-900/30 shadow-sm';
+                row.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-8 bg-indigo-500 rounded-full"></div>
+                        <div>
+                            <div class="font-bold">${rem.title}</div>
+                            <div class="text-[10px] text-gray-400">Assegnato a: <span class="text-indigo-600 dark:text-indigo-400 font-semibold">${rem.childName}</span></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[11px] font-bold px-2 py-1 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 rounded-lg">${rem.date}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded font-bold ${rem.done ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${rem.done ? 'Completato' : 'In Sospeso'}</span>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // GIOCHI
+        let ticBoard = ['', '', '', '', '', '', '', '', ''];
+        let ticTurn = 'X';
+        let ticActive = true;
+
+        function makeTicMove(idx) {
+            if (!ticActive || ticBoard[idx] !== '') return;
+            ticBoard[idx] = ticTurn;
+            document.getElementById(`tictac-${idx}`).innerText = ticTurn;
+
+            const wins = [
+                [0,1,2],[3,4,5],[6,7,8],
+                [0,3,6],[1,4,7],[2,5,8],
+                [0,4,8],[2,4,6]
+            ];
+
+            let winner = null;
+            wins.forEach(w => {
+                if (ticBoard[w[0]] && ticBoard[w[0]] === ticBoard[w[1]] && ticBoard[w[0]] === ticBoard[w[2]]) {
+                    winner = ticBoard[w[0]];
+                }
+            });
+
+            if (winner) {
+                document.getElementById('ticTacToeStatus').innerText = `Ha vinto il giocatore ${winner}! 🎉`;
+                ticActive = false;
+                return;
+            }
+
+            if (!ticBoard.includes('')) {
+                document.getElementById('ticTacToeStatus').innerText = `Pareggio! 🤝`;
+                ticActive = false;
+                return;
+            }
+
+            ticTurn = ticTurn === 'X' ? 'O' : 'X';
+            document.getElementById('ticTacToeStatus').innerText = `Turno del giocatore: ${ticTurn}`;
+        }
+
+        function resetTicTacToe() {
+            ticBoard = ['', '', '', '', '', '', '', '', ''];
+            ticTurn = 'X';
+            ticActive = true;
+            document.getElementById('ticTacToeStatus').innerText = 'Tocca una casella per iniziare!';
+            for (let i = 0; i < 9; i++) {
+                document.getElementById(`tictac-${i}`).innerText = '';
+            }
+        }
+
+        let secretNum = Math.floor(Math.random() * 50) + 1;
+        function checkNumberGuess() {
+            const val = parseInt(document.getElementById('guessInput').value);
+            const status = document.getElementById('guessStatus');
+            if (isNaN(val)) return;
+
+            if (val === secretNum) {
+                status.innerText = `Bravo! Hai indovinato il numero ${secretNum}! 🎉`;
+            } else if (val < secretNum) {
+                status.innerText = `Troppo basso! Prova un numero più alto. 📈`;
+            } else {
+                status.innerText = `Troppo alto! Prova un numero più basso. 📉`;
+            }
+        }
+
+        function resetNumberGuess() {
+            secretNum = Math.floor(Math.random() * 50) + 1;
+            document.getElementById('guessStatus').innerText = 'Nuovo numero pensato! Prova a indovinarlo.';
+            document.getElementById('guessInput').value = '';
+        }
+
+        // ARCHIVIO
+        function renderMonthlyArchives() {
+            const container = document.getElementById('monthlyArchivesList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!appData.monthlyArchives || appData.monthlyArchives.length === 0) {
+                container.innerHTML = '<div class="text-xs text-gray-400 text-center py-2">Nessun archivio mensile precedente.</div>';
+                return;
+            }
+
+            appData.monthlyArchives.slice().reverse().forEach(arch => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 text-xs border border-gray-200 dark:border-gray-700 shadow-sm';
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-file-excel text-emerald-600 text-base"></i>
+                        <div>
+                            <div class="font-bold">Resoconto Mese: ${arch.monthLabel}</div>
+                            <div class="text-[10px] text-gray-400">${arch.transactions.length} movimenti registrati</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="downloadArchiveCSV('${arch.id}')" class="bg-emerald-600 text-white px-2.5 py-1.5 rounded-lg font-bold text-[11px] tap-active flex items-center space-x-1">
+                            <i class="fas fa-download"></i>
+                            <span>Scarica</span>
+                        </button>
+                        <button onclick="deleteArchive('${arch.id}')" class="bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-300 px-2 py-1.5 rounded-lg font-bold text-[11px] tap-active">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function downloadArchiveCSV(archiveId) {
+            const arch = appData.monthlyArchives.find(a => a.id === archiveId);
+            if (!arch) return;
+
+            let csv = "ID,Tipo,Descrizione,Importo,Data,Categoria,Stato\n";
+            arch.transactions.forEach(t => {
+                csv += `"${t.id}","${t.type}","${t.desc}","${t.amount}","${t.date}","${t.category}","${t.status}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `resoconto_mensile_${arch.monthLabel}.csv`;
+            a.click();
+        }
+
+        function deleteArchive(archiveId) {
+            if (confirm('Vuoi eliminare definitivamente questo report d\'archivio?')) {
+                appData.monthlyArchives = appData.monthlyArchives.filter(a => a.id !== archiveId);
+                saveLocalData();
+            }
+        }
+
+        // SPESA
+        function renderGrocery() {
+            const container = document.getElementById('groceryCategories');
+            container.innerHTML = '';
+            let textOutput = "🛒 *LISTA DELLA SPESA FAMIGLIA* 🛒\n\n";
+            let hasActiveItems = false;
+
+            appData.grocery.forEach((cat, catIdx) => {
+                let catTextHeader = `--- ${cat.category.toUpperCase()} ---\n`;
+                let catHasActive = false;
+
+                let itemsHtml = cat.items.map((item, itemIdx) => {
+                    if (item.active) {
+                        hasActiveItems = true;
+                        catHasActive = true;
+                        catTextHeader += `• ${item.name} (${item.qty || 1})\n`;
+                    }
+
+                    return `
+                        <div class="p-3 rounded-xl border flex items-center justify-between shadow-sm ${item.active ? 'bg-amber-500/10 border-amber-500' : 'bg-white/60 dark:bg-gray-800 border-gray-200 dark:border-gray-700'}">
+                            <div class="flex items-center space-x-2 cursor-pointer" onclick="toggleGroceryItem(${catIdx}, ${itemIdx})">
+                                <i class="fas ${item.active ? 'fa-check-circle text-amber-500' : 'fa-circle text-gray-300'} text-lg"></i>
+                                <span class="text-xs font-bold ${item.active ? 'text-amber-600 dark:text-amber-400' : ''}">${item.name}</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <button onclick="changeGroceryQty(${catIdx}, ${itemIdx}, -1)" class="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-lg text-xs font-bold tap-active">-</button>
+                                <span class="text-xs font-bold px-1">${item.qty || 1}</span>
+                                <button onclick="changeGroceryQty(${catIdx}, ${itemIdx}, 1)" class="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-lg text-xs font-bold tap-active">+</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                if (catHasActive) {
+                    textOutput += catTextHeader + "\n";
+                }
+
+                const catBlock = document.createElement('div');
+                catBlock.className = 'glass-card rounded-2xl p-4 shadow-sm space-y-3';
+                catBlock.innerHTML = `
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400">${cat.category}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${itemsHtml}</div>
+                `;
+                container.appendChild(catBlock);
+            });
+
+            document.getElementById('groceryTextArea').value = hasActiveItems ? textOutput.trim() : "Nessun prodotto selezionato al momento.";
+        }
+
+        function toggleGroceryItem(catIdx, itemIdx) {
+            appData.grocery[catIdx].items[itemIdx].active = !appData.grocery[catIdx].items[itemIdx].active;
+            saveLocalData();
+        }
+
+        function changeGroceryQty(catIdx, itemIdx, delta) {
+            const item = appData.grocery[catIdx].items[itemIdx];
+            item.qty = Math.max(1, (item.qty || 1) + delta);
+            saveLocalData();
+        }
+
+        function addCustomGrocery() {
+            const input = document.getElementById('newGroceryInput');
+            const qtyInput = document.getElementById('newGroceryQty');
+            const name = input.value.trim();
+            const qty = parseInt(qtyInput.value) || 1;
+
+            if (name) {
+                appData.grocery[0].items.push({ name, qty, active: true });
+                input.value = '';
+                qtyInput.value = '1';
+                saveLocalData();
+            }
+        }
+
+        function clearActiveGrocery() {
+            appData.grocery.forEach(cat => cat.items.forEach(i => i.active = false));
+            saveLocalData();
+        }
+
+        function copyGroceryText() {
+            const txt = document.getElementById('groceryTextArea');
+            txt.select();
+            document.execCommand('copy');
+            alert('Lista spesa copiata negli appunti!');
+        }
+
+        // AMMINISTRATORE
+        function unlockAdminPanel() {
+            const pin = document.getElementById('inputAdminPin').value;
+            const currentMasterPin = appData.settings.adminPin || '1234';
+
+            if (pin === currentMasterPin) {
+                document.getElementById('adminPinBlock').classList.add('hidden');
+                document.getElementById('adminUnlockedContent').classList.remove('hidden');
+                document.getElementById('inputAdminPin').value = '';
+                renderAdminUserSelect();
+                renderAdminUsersList();
+            } else {
+                alert('PIN Errato! Riprova.');
+            }
+        }
+
+        function lockAdminPanel() {
+            document.getElementById('adminUnlockedContent').classList.add('hidden');
+            document.getElementById('adminPinBlock').classList.remove('hidden');
+        }
+
+        function renderAdminUserSelect() {
+            const select = document.getElementById('adminUserSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            if (!appData.users) appData.users = [];
+
+            appData.users.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u.id;
+                opt.innerText = `${u.nickname} (${u.role})`;
+                select.appendChild(opt);
+            });
+            loadSelectedUserToEdit();
+        }
+
+        function loadSelectedUserToEdit() {
+            const select = document.getElementById('adminUserSelect');
+            if (!select || !select.value) return;
+            const user = appData.users.find(u => u.id === select.value);
+            if (user) {
+                document.getElementById('adminEditNickname').value = user.nickname || '';
+                document.getElementById('adminEditPassword').value = '';
+            }
+        }
+
+        function saveUserAccountAdmin(e) {
+            e
