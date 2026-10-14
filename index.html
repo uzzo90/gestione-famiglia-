@@ -753,7 +753,6 @@
         window.appData = defaultAppData;
         let isSyncingFromCloud = false;
 
-        // Ascolta in tempo reale dal database Firebase
         const dbRef = ref(db, 'famigliaData');
         onValue(dbRef, (snapshot) => {
             const serverData = snapshot.val();
@@ -773,7 +772,6 @@
                 }
                 isSyncingFromCloud = false;
             } else {
-                // Primo avvio: salva i dati di default sul cloud
                 set(dbRef, defaultAppData);
             }
         });
@@ -785,10 +783,6 @@
             }).catch((error) => {
                 console.error("Errore di sincronizzazione cloud: ", error);
             });
-        };
-
-        window.loadLocalData = function() {
-            // I dati arrivano direttamente da Firebase in tempo reale
         };
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -810,6 +804,10 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        let currentChild = 'simone';
+        let currentRelative = 'zio_giovanni';
+        let myChart = null;
+
         function checkMonthlyRollover() {
             let appData = window.appData;
             const currentMonthStr = new Date().toISOString().slice(0, 7);
@@ -1550,313 +1548,3 @@
                     </div>
                 `;
                 container.appendChild(item);
-            });
-        }
-
-        function downloadArchiveCSV(archiveId) {
-            let appData = window.appData;
-            const arch = appData.monthlyArchives.find(a => a.id === archiveId);
-            if (!arch) return;
-
-            let csv = "ID,Tipo,Descrizione,Importo,Data,Categoria,Stato\n";
-            arch.transactions.forEach(t => {
-                csv += `"${t.id}","${t.type}","${t.desc}","${t.amount}","${t.date}","${t.category}","${t.status}"\n`;
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `resoconto_mensile_${arch.monthLabel}.csv`;
-            a.click();
-        }
-
-        function deleteArchive(archiveId) {
-            let appData = window.appData;
-            if (confirm('Vuoi eliminare definitivamente questo report d\'archivio?')) {
-                appData.monthlyArchives = appData.monthlyArchives.filter(a => a.id !== archiveId);
-                saveLocalData();
-            }
-        }
-
-        // SPESA
-        function renderGrocery() {
-            let appData = window.appData;
-            const container = document.getElementById('groceryCategories');
-            container.innerHTML = '';
-            let textOutput = "🛒 *LISTA DELLA SPESA FAMIGLIA* 🛒\n\n";
-            let hasActiveItems = false;
-
-            appData.grocery.forEach((cat, catIdx) => {
-                let catTextHeader = `--- ${cat.category.toUpperCase()} ---\n`;
-                let catHasActive = false;
-
-                let itemsHtml = cat.items.map((item, itemIdx) => {
-                    if (item.active) {
-                        hasActiveItems = true;
-                        catHasActive = true;
-                        catTextHeader += `• ${item.name} (${item.qty || 1})\n`;
-                    }
-
-                    return `
-                        <div class="p-3 rounded-xl border flex items-center justify-between shadow-sm ${item.active ? 'bg-amber-500/10 border-amber-500' : 'bg-white/60 dark:bg-gray-800 border-gray-200 dark:border-gray-700'}">
-                            <div class="flex items-center space-x-2 cursor-pointer" onclick="toggleGroceryItem(${catIdx}, ${itemIdx})">
-                                <i class="fas ${item.active ? 'fa-check-circle text-amber-500' : 'fa-circle text-gray-300'} text-lg"></i>
-                                <span class="text-xs font-bold ${item.active ? 'text-amber-600 dark:text-amber-400' : ''}">${item.name}</span>
-                            </div>
-                            <div class="flex items-center space-x-1">
-                                <button onclick="changeGroceryQty(${catIdx}, ${itemIdx}, -1)" class="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-lg text-xs font-bold tap-active">-</button>
-                                <span class="text-xs font-bold px-1">${item.qty || 1}</span>
-                                <button onclick="changeGroceryQty(${catIdx}, ${itemIdx}, 1)" class="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-lg text-xs font-bold tap-active">+</button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                if (catHasActive) {
-                    textOutput += catTextHeader + "\n";
-                }
-
-                const catBlock = document.createElement('div');
-                catBlock.className = 'glass-card rounded-2xl p-4 shadow-sm space-y-3';
-                catBlock.innerHTML = `
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400">${cat.category}</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${itemsHtml}</div>
-                `;
-                container.appendChild(catBlock);
-            });
-
-            document.getElementById('groceryTextArea').value = hasActiveItems ? textOutput.trim() : "Nessun prodotto selezionato al momento.";
-        }
-
-        function toggleGroceryItem(catIdx, itemIdx) {
-            let appData = window.appData;
-            appData.grocery[catIdx].items[itemIdx].active = !appData.grocery[catIdx].items[itemIdx].active;
-            saveLocalData();
-        }
-
-        function changeGroceryQty(catIdx, itemIdx, delta) {
-            let appData = window.appData;
-            const item = appData.grocery[catIdx].items[itemIdx];
-            item.qty = Math.max(1, (item.qty || 1) + delta);
-            saveLocalData();
-        }
-
-        function addCustomGrocery() {
-            let appData = window.appData;
-            const input = document.getElementById('newGroceryInput');
-            const qtyInput = document.getElementById('newGroceryQty');
-            const name = input.value.trim();
-            const qty = parseInt(qtyInput.value) || 1;
-
-            if (name) {
-                appData.grocery[0].items.push({ name, qty, active: true });
-                input.value = '';
-                qtyInput.value = '1';
-                saveLocalData();
-            }
-        }
-
-        function clearActiveGrocery() {
-            let appData = window.appData;
-            appData.grocery.forEach(cat => cat.items.forEach(i => i.active = false));
-            saveLocalData();
-        }
-
-        function copyGroceryText() {
-            const txt = document.getElementById('groceryTextArea');
-            txt.select();
-            document.execCommand('copy');
-            alert('Lista spesa copiata negli appunti!');
-        }
-
-        // AMMINISTRATORE
-        function unlockAdminPanel() {
-            let appData = window.appData;
-            const pin = document.getElementById('inputAdminPin').value;
-            const currentMasterPin = appData.settings.adminPin || '1234';
-
-            if (pin === currentMasterPin) {
-                document.getElementById('adminPinBlock').classList.add('hidden');
-                document.getElementById('adminUnlockedContent').classList.remove('hidden');
-                document.getElementById('inputAdminPin').value = '';
-                renderAdminUserSelect();
-                renderAdminUsersList();
-            } else {
-                alert('PIN Errato! Riprova.');
-            }
-        }
-
-        function lockAdminPanel() {
-            document.getElementById('adminUnlockedContent').classList.add('hidden');
-            document.getElementById('adminPinBlock').classList.remove('hidden');
-        }
-
-        function renderAdminUserSelect() {
-            let appData = window.appData;
-            const select = document.getElementById('adminUserSelect');
-            if (!select) return;
-            select.innerHTML = '';
-            if (!appData.users) appData.users = [
-                { id: 'u1', nickname: 'Papà (Admin)', role: 'Admin', pass: '1234', status: 'Attivo' },
-                { id: 'u2', nickname: 'Mamma', role: 'Membro', pass: '1234', status: 'Attivo' }
-            ];
-
-            appData.users.forEach(u => {
-                const opt = document.createElement('option');
-                opt.value = u.id;
-                opt.innerText = `${u.nickname} (${u.role})`;
-                select.appendChild(opt);
-            });
-            loadSelectedUserToEdit();
-        }
-
-        function loadSelectedUserToEdit() {
-            let appData = window.appData;
-            const select = document.getElementById('adminUserSelect');
-            if (!select || !select.value) return;
-            const user = appData.users.find(u => u.id === select.value);
-            if (user) {
-                document.getElementById('adminEditNickname').value = user.nickname || '';
-                document.getElementById('adminEditPassword').value = '';
-            }
-        }
-
-        function saveUserAccountAdmin(e) {
-            e.preventDefault();
-            let appData = window.appData;
-            const selectVal = document.getElementById('adminUserSelect').value;
-            const newNick = document.getElementById('adminEditNickname').value;
-            const newPass = document.getElementById('adminEditPassword').value;
-
-            const user = appData.users.find(u => u.id === selectVal);
-            if (user) {
-                user.nickname = newNick;
-                if (newPass.trim().length > 0) user.pass = newPass;
-                saveLocalData();
-                renderAdminUserSelect();
-                populateLoginUserDropdown();
-                alert(`Account di ${newNick} aggiornato con successo!`);
-            }
-        }
-
-        function addNewUserAdmin(e) {
-            e.preventDefault();
-            let appData = window.appData;
-            const nick = document.getElementById('adminNewUserNick').value.trim();
-            const role = document.getElementById('adminNewUserRole').value;
-            const pass = document.getElementById('adminNewUserPass').value.trim();
-
-            if (!nick || !pass) {
-                alert('Inserisci nickname e password validi.');
-                return;
-            }
-
-            if (!appData.users) appData.users = [
-                { id: 'u1', nickname: 'Papà (Admin)', role: 'Admin', pass: '1234', status: 'Attivo' },
-                { id: 'u2', nickname: 'Mamma', role: 'Membro', pass: '1234', status: 'Attivo' }
-            ];
-            appData.users.push({
-                id: 'u_' + Date.now(),
-                nickname: nick,
-                role: role,
-                pass: pass,
-                status: 'Attivo'
-            });
-
-            saveLocalData();
-            document.getElementById('adminNewUserNick').value = '';
-            document.getElementById('adminNewUserPass').value = '';
-            renderAdminUserSelect();
-            renderAdminUsersList();
-            populateLoginUserDropdown();
-            alert(`Nuovo utente "${nick}" creato con successo!`);
-        }
-
-        function renderAdminUsersList() {
-            let appData = window.appData;
-            const container = document.getElementById('usersListAdmin');
-            if (!container) return;
-            container.innerHTML = '';
-            if (!appData.users) appData.users = [
-                { id: 'u1', nickname: 'Papà (Admin)', role: 'Admin', pass: '1234', status: 'Attivo' },
-                { id: 'u2', nickname: 'Mamma', role: 'Membro', pass: '1234', status: 'Attivo' }
-            ];
-
-            appData.users.forEach(u => {
-                const item = document.createElement('div');
-                item.className = 'flex items-center justify-between p-2.5 rounded-xl bg-white/60 dark:bg-gray-800 text-xs border border-gray-100 dark:border-gray-700 shadow-sm';
-                item.innerHTML = `
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-user-circle text-indigo-500 text-sm"></i>
-                        <div>
-                            <div class="font-bold">${u.nickname}</div>
-                            <div class="text-[10px] text-gray-400">${u.role}</div>
-                        </div>
-                    </div>
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${u.role === 'Admin' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'}">${u.status}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function saveFamilyName(val) {
-            let appData = window.appData;
-            appData.settings.name = val;
-            saveLocalData();
-        }
-
-        function setAvatar(emoji) {
-            let appData = window.appData;
-            appData.settings.avatar = emoji;
-            saveLocalData();
-        }
-
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        function exportJSONBackup() {
-            let appData = window.appData;
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `backup_salvaggio_family_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
-        }
-
-        function exportCSVTransactions() {
-            let appData = window.appData;
-            let csv = "ID,Tipo,Descrizione,Importo,Data,Categoria,Stato\n";
-            appData.transactions.forEach(t => {
-                csv += `"${t.id}","${t.type}","${t.desc}","${t.amount}","${t.date}","${t.category}","${t.status}"\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `movimenti_correnti_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-        }
-
-        function importJSONBackup(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    window.appData = JSON.parse(e.target.result);
-                    saveLocalData();
-                    populateLoginUserDropdown();
-                    alert('Backup ripristinato con successo!');
-                } catch (err) {
-                    alert('Errore nella lettura del file di backup.');
-                }
-            };
-            reader.readAsText(file);
-        }
-    </script>
-</body>
-</html>
