@@ -1766,4 +1766,97 @@
 
             saveLocalData();
             document.getElementById('adminNewUserNick').value = '';
-            document
+            document.getElementById('adminNewUserPass').value = '';
+            renderAdminUserSelect();
+            renderAdminUsersList();
+            populateLoginUserDropdown();
+            alert(`Nuovo utente "${nick}" creato con successo!`);
+        }
+
+        function renderAdminUsersList() {
+            let appData = window.appData;
+            const container = document.getElementById('usersListAdmin');
+            if (!container) return;
+            container.innerHTML = '';
+            if (!appData.users) appData.users = [
+                { id: 'u1', nickname: 'Papà (Admin)', role: 'Admin', pass: '1234', status: 'Attivo' },
+                { id: 'u2', nickname: 'Mamma', role: 'Membro', pass: '1234', status: 'Attivo' }
+            ];
+
+            appData.users.forEach(u => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-2.5 rounded-xl bg-white/60 dark:bg-gray-800 text-xs border border-gray-100 dark:border-gray-700 shadow-sm';
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-user-circle text-indigo-500 text-sm"></i>
+                        <div>
+                            <div class="font-bold">${u.nickname}</div>
+                            <div class="text-[10px] text-gray-400">${u.role}</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${u.role === 'Admin' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'}">${u.status}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function saveFamilyName(val) {
+            let appData = window.appData;
+            appData.settings.name = val;
+            saveLocalData();
+        }
+
+        function setAvatar(emoji) {
+            let appData = window.appData;
+            appData.settings.avatar = emoji;
+            saveLocalData();
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function exportJSONBackup() {
+            let appData = window.appData;
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `backup_salvaggio_family_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function exportCSVTransactions() {
+            let appData = window.appData;
+            let csv = "ID,Tipo,Descrizione,Importo,Data,Categoria,Stato\n";
+            appData.transactions.forEach(t => {
+                csv += `"${t.id}","${t.type}","${t.desc}","${t.amount}","${t.date}","${t.category}","${t.status}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `movimenti_correnti_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function importJSONBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    window.appData = JSON.parse(e.target.result);
+                    saveLocalData();
+                    populateLoginUserDropdown();
+                    alert('Backup ripristinato con successo!');
+                } catch (err) {
+                    alert('Errore nella lettura del file di backup.');
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
