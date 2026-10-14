@@ -701,16 +701,34 @@
             children: {
                 simone: {
                     name: 'Simone',
+                    avatar: '👦',
+                    fiscalCode: '',
+                    school: '',
+                    section: '',
+                    birthDate: '',
+                    zodiac: '',
                     doctors: [{ role: 'Pediatra', name: 'Dr. Rossi', phone: '+393331234567' }],
                     reminders: [{ id: 'r1', title: 'Visita Controllo Pediatra', date: '2026-11-05', done: false }]
                 },
                 elisa: {
                     name: 'Elisa',
+                    avatar: '👧',
+                    fiscalCode: '',
+                    school: '',
+                    section: '',
+                    birthDate: '',
+                    zodiac: '',
                     doctors: [{ role: 'Pediatra', name: 'Dr. Rossi', phone: '+393331234567' }],
                     reminders: [{ id: 'r2', title: 'Quota Gita Scolastica', date: '2026-10-20', done: false }]
                 },
                 vincenzo: {
                     name: 'Vincenzo',
+                    avatar: '👦',
+                    fiscalCode: '',
+                    school: '',
+                    section: '',
+                    birthDate: '',
+                    zodiac: '',
                     doctors: [{ role: 'Pediatra', name: 'Dr. Rossi', phone: '+393331234567' }],
                     reminders: [{ id: 'r3', title: 'Iscrizione Corso Calcio', date: '2026-10-15', done: true }]
                 }
@@ -737,20 +755,37 @@
 
         window.appData = defaultAppData;
         let isSyncingFromCloud = false;
+        let initialLoadDone = false;
 
         const dbRef = ref(db, 'famigliaData');
+        
         onValue(dbRef, (snapshot) => {
             const serverData = snapshot.val();
             if (serverData) {
                 isSyncingFromCloud = true;
+                const currentActiveUser = window.appData.activeUser;
                 window.appData = serverData;
                 
-                // Controlli di sicurezza integrità dati
+                if (currentActiveUser && !window.appData.activeUser) {
+                    window.appData.activeUser = currentActiveUser;
+                }
+
                 if (!window.appData.users || window.appData.users.length === 0) {
                     window.appData.users = standardUsers;
                 }
                 if (!window.appData.transactions) {
                     window.appData.transactions = [];
+                }
+
+                if (window.appData.children) {
+                    Object.keys(window.appData.children).forEach(k => {
+                        if (!window.appData.children[k].avatar) window.appData.children[k].avatar = '👦';
+                        if (window.appData.children[k].fiscalCode === undefined) window.appData.children[k].fiscalCode = '';
+                        if (window.appData.children[k].school === undefined) window.appData.children[k].school = '';
+                        if (window.appData.children[k].section === undefined) window.appData.children[k].section = '';
+                        if (window.appData.children[k].birthDate === undefined) window.appData.children[k].birthDate = '';
+                        if (window.appData.children[k].zodiac === undefined) window.appData.children[k].zodiac = '';
+                    });
                 }
 
                 applyTheme(window.appData.settings.theme || 'bw');
@@ -763,12 +798,16 @@
                     renderAll();
                 }
                 isSyncingFromCloud = false;
+                initialLoadDone = true;
             } else {
-                set(dbRef, defaultAppData);
+                if (!initialLoadDone) {
+                    set(dbRef, defaultAppData);
+                }
             }
         });
 
         window.saveLocalData = function() {
+            if (isSyncingFromCloud) return;
             if (!window.appData.users || window.appData.users.length === 0) {
                 window.appData.users = standardUsers;
             }
@@ -776,12 +815,10 @@
                 window.appData.transactions = [];
             }
             
-            // Renderizza subito in locale per reattività immediata
             renderAll();
 
-            // Salva su Firebase
             set(dbRef, window.appData).catch((error) => {
-                console.error("Errore sincronizzazione: ", error);
+                console.error("Errore sincronizzazione Cloud: ", error);
             });
         };
 
@@ -1327,6 +1364,44 @@
             `).join('');
 
             container.innerHTML = `
+                <!-- SEZIONE INFO & ANAGRAFICA -->
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3 border border-indigo-500/20">
+                    <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl">${child.avatar || '👦'}</span>
+                            <h3 class="text-sm font-bold text-indigo-600 dark:text-indigo-400">Anagrafica & Info (${child.name})</h3>
+                        </div>
+                        <div class="flex space-x-1">
+                            <button onclick="setChildAvatar('${currentChild}', '👦')" class="p-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg tap-active">👦</button>
+                            <button onclick="setChildAvatar('${currentChild}', '👧')" class="p-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg tap-active">👧</button>
+                            <button onclick="setChildAvatar('${currentChild}', '⭐')" class="p-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg tap-active">⭐</button>
+                            <button onclick="setChildAvatar('${currentChild}', '🚀')" class="p-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg tap-active">🚀</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div>
+                            <label class="text-[11px] font-semibold text-gray-500">Codice Fiscale</label>
+                            <input type="text" value="${child.fiscalCode || ''}" onchange="updateChildInfo('${currentChild}', 'fiscalCode', this.value)" placeholder="Inserisci codice fiscale..." class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs uppercase font-mono">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-semibold text-gray-500">Scuola</label>
+                            <input type="text" value="${child.school || ''}" onchange="updateChildInfo('${currentChild}', 'school', this.value)" placeholder="Es. Scuola Elementare..." class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-semibold text-gray-500">Sezione / Classe</label>
+                            <input type="text" value="${child.section || ''}" onchange="updateChildInfo('${currentChild}', 'section', this.value)" placeholder="Es. 2ª B..." class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-semibold text-gray-500">Data di Nascita</label>
+                            <input type="date" value="${child.birthDate || ''}" onchange="updateChildInfo('${currentChild}', 'birthDate', this.value)" class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="text-[11px] font-semibold text-gray-500">Segno Zodiacale & Note Extra</label>
+                            <input type="text" value="${child.zodiac || ''}" onchange="updateChildInfo('${currentChild}', 'zodiac', this.value)" placeholder="Es. Leone - Allergie o note particolari..." class="w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-2 text-xs">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
                     <h3 class="text-sm font-bold flex items-center justify-between"><span>Contatti Utili & Dottori (${child.name})</span><i class="fas fa-user-md text-indigo-500"></i></h3>
                     <div class="space-y-2">${doctorsHtml}</div>
@@ -1336,6 +1411,20 @@
                     <div class="space-y-2">${remindersHtml}</div>
                 </div>
             `;
+        }
+
+        function updateChildInfo(childKey, field, val) {
+            let appData = window.appData;
+            if (!appData.children[childKey]) return;
+            appData.children[childKey][field] = val;
+            saveLocalData();
+        }
+
+        function setChildAvatar(childKey, emoji) {
+            let appData = window.appData;
+            if (!appData.children[childKey]) return;
+            appData.children[childKey].avatar = emoji;
+            saveLocalData();
         }
 
         function toggleReminder(childKey, id) {
