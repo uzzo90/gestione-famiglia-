@@ -745,9 +745,12 @@
                 isSyncingFromCloud = true;
                 window.appData = serverData;
                 
-                // FORZA SEMPRE la presenza di Papà e Mamma se non ci sono
+                // Controlli di sicurezza integrità dati
                 if (!window.appData.users || window.appData.users.length === 0) {
                     window.appData.users = standardUsers;
+                }
+                if (!window.appData.transactions) {
+                    window.appData.transactions = [];
                 }
 
                 applyTheme(window.appData.settings.theme || 'bw');
@@ -766,14 +769,18 @@
         });
 
         window.saveLocalData = function() {
-            if (isSyncingFromCloud) return;
-            // Assicura che gli utenti non si cancellino mai salvando
             if (!window.appData.users || window.appData.users.length === 0) {
                 window.appData.users = standardUsers;
             }
-            set(dbRef, window.appData).then(() => {
-                renderAll();
-            }).catch((error) => {
+            if (!window.appData.transactions) {
+                window.appData.transactions = [];
+            }
+            
+            // Renderizza subito in locale per reattività immediata
+            renderAll();
+
+            // Salva su Firebase
+            set(dbRef, window.appData).catch((error) => {
                 console.error("Errore sincronizzazione: ", error);
             });
         };
@@ -951,6 +958,7 @@
         function renderTransactionsList() {
             let appData = window.appData;
             const container = document.getElementById('transactionsList');
+            if (!container) return;
             container.innerHTML = '';
 
             if (!appData.transactions || appData.transactions.length === 0) {
