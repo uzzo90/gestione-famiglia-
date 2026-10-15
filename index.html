@@ -347,7 +347,7 @@
             <div class="glass-card rounded-2xl p-4 shadow-sm text-center space-y-2">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">Aggiungi nuovo membro alla scheda Parenti</h3>
                 <button onclick="addNewRelativePrompt()" class="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-4 py-2.5 rounded-xl text-xs font-bold tap-active shadow-sm">
-                    <i class="fas fa-user-plus mr-1"></i> Aggiungi Parente
+                    <i class="fas fa-user-plus mr-1"></i> Aggiungi Parente (es. Mamma)
                 </button>
             </div>
         </section>
@@ -668,7 +668,7 @@
         </div>
     </div>
 
-    <!-- FIREBASE SDKs -->
+    <!-- FIREBASE SDKs & LOGICA APPLICATIVA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
@@ -692,7 +692,6 @@
         ];
 
         let defaultAppData = {
-            activeUser: null,
             transactions: [
                 { id: '1', type: 'entrata', desc: 'Stipendio Mese', amount: 2100.00, date: '2026-10-01', category: 'Stipendio', status: 'Saldato' }
             ],
@@ -763,19 +762,16 @@
             const serverData = snapshot.val();
             if (serverData) {
                 isSyncingFromCloud = true;
-                const currentActiveUser = window.appData.activeUser;
-                window.appData = serverData;
                 
-                if (currentActiveUser && !window.appData.activeUser) {
-                    window.appData.activeUser = currentActiveUser;
-                }
-
-                if (!window.appData.users || window.appData.users.length === 0) {
-                    window.appData.users = standardUsers;
-                }
-                if (!window.appData.transactions) {
-                    window.appData.transactions = [];
-                }
+                window.appData.transactions = serverData.transactions || [];
+                window.appData.monthlyArchives = serverData.monthlyArchives || [];
+                window.appData.lastActiveMonth = serverData.lastActiveMonth || new Date().toISOString().slice(0, 7);
+                window.appData.children = serverData.children || defaultAppData.children;
+                window.appData.relatives = serverData.relatives || defaultAppData.relatives;
+                window.appData.parentDeadlines = serverData.parentDeadlines || [];
+                window.appData.grocery = serverData.grocery || defaultAppData.grocery;
+                window.appData.settings = serverData.settings || defaultAppData.settings;
+                window.appData.users = serverData.users || standardUsers;
 
                 if (window.appData.children) {
                     Object.keys(window.appData.children).forEach(k => {
@@ -790,6 +786,15 @@
 
                 applyTheme(window.appData.settings.theme || 'bw');
                 populateLoginUserDropdown();
+
+                // GESTIONE INDIPENDENZA DISPOSITIVO LOCALE
+                const localActiveUserId = localStorage.getItem('salvaggio_active_user_id');
+                if (localActiveUserId) {
+                    const foundUser = window.appData.users.find(u => u.id === localActiveUserId);
+                    if (foundUser) {
+                        window.appData.activeUser = foundUser;
+                    }
+                }
 
                 if (!window.appData.activeUser) {
                     document.getElementById('welcomeLoginOverlay').classList.remove('hidden', 'opacity-0');
@@ -817,7 +822,10 @@
             
             renderAll();
 
-            set(dbRef, window.appData).catch((error) => {
+            let dataToSave = JSON.parse(JSON.stringify(window.appData));
+            delete dataToSave.activeUser;
+
+            set(dbRef, dataToSave).catch((error) => {
                 console.error("Errore sincronizzazione Cloud: ", error);
             });
         };
@@ -830,10 +838,10 @@
         });
     </script>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT LOGIC AGGIORNATA -->
     <script>
         let currentChild = 'simone';
-        let currentRelative = 'zio_giovanni';
+        let currentRelative = null;
         let myChart = null;
 
         function checkMonthlyRollover() {
@@ -864,13 +872,10 @@
             if (!select) return;
             select.innerHTML = '';
             
-            let userList = appData.users;
-            if (!userList || userList.length === 0) {
-                userList = [
-                    { id: 'u1', nickname: 'Papà (Admin)', role: 'Admin', pass: '1234', status: 'Attivo' },
-                    { id: 'u2', nickname: 'Mamma', role: 'Membro', pass: '1234', status: 'Attivo' }
-                ];
-            }
+            let userList = appData.users || [
+                { id: 'u1', nickname: 'Papà (Admin)', role: 'Admin', pass: '1234', status: 'Attivo' },
+                { id: 'u2', nickname: 'Mamma', role: 'Membro', pass: '1234', status: 'Attivo' }
+            ];
 
             userList.forEach(u => {
                 const opt = document.createElement('option');
@@ -896,7 +901,7 @@
             const user = appData.users.find(u => u.id === selectedId);
             if (user && user.pass === enteredPass) {
                 appData.activeUser = user;
-                saveLocalData();
+                localStorage.setItem('salvaggio_active_user_id', user.id);
 
                 const overlay = document.getElementById('welcomeLoginOverlay');
                 overlay.classList.add('opacity-0');
@@ -912,7 +917,7 @@
         function performAppLogout() {
             let appData = window.appData;
             appData.activeUser = null;
-            saveLocalData();
+            localStorage.removeItem('salvaggio_active_user_id');
             populateLoginUserDropdown();
 
             const overlay = document.getElementById('welcomeLoginOverlay');
@@ -1206,7 +1211,7 @@
             }
         }
 
-        // SEZIONE ALTRI PARENTI
+        // SEZIONE ALTRI PARENTI (Corretta e stabilizzata)
         function renderRelativesTabs() {
             let appData = window.appData;
             const container = document.getElementById('relativesTabsContainer');
@@ -1214,8 +1219,20 @@
             container.innerHTML = '';
 
             if (!appData.relatives) appData.relatives = {};
+            const keys = Object.keys(appData.relatives);
 
-            Object.keys(appData.relatives).forEach(key => {
+            if (keys.length === 0) {
+                container.innerHTML = '<div class="text-xs text-gray-400 p-2">Nessun parente inserito.</div>';
+                currentRelative = null;
+                renderRelativeCard();
+                return;
+            }
+
+            if (!currentRelative || !appData.relatives[currentRelative]) {
+                currentRelative = keys[0];
+            }
+
+            keys.forEach(key => {
                 const rel = appData.relatives[key];
                 const isActive = (currentRelative === key);
                 const btn = document.createElement('button');
@@ -1237,22 +1254,25 @@
             const container = document.getElementById('relativeCardContainer');
             if (!container) return;
 
-            if (!appData.relatives || !appData.relatives[currentRelative]) {
-                container.innerHTML = '<div class="text-xs text-gray-400 text-center py-4">Seleziona un parente.</div>';
+            if (!appData.relatives || Object.keys(appData.relatives).length === 0 || !currentRelative || !appData.relatives[currentRelative]) {
+                container.innerHTML = '<div class="glass-card rounded-2xl p-6 text-center text-xs text-gray-400">Nessun parente selezionato o presente. Clicca sotto per aggiungere il primo parente (es. Mamma).</div>';
                 return;
             }
 
             const rel = appData.relatives[currentRelative];
-            let doctorsHtml = rel.doctors.map(d => `
+            let doctorsHtml = (rel.doctors || []).map((d, dIdx) => `
                 <div class="flex justify-between items-center bg-white/60 dark:bg-gray-800 p-3 rounded-xl shadow-sm">
                     <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider">${d.role}</div><div class="text-sm font-bold">${d.name}</div></div>
-                    <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
-                        <i class="fas fa-phone-alt"></i><span>Chiama</span>
-                    </a>
+                    <div class="flex items-center space-x-2">
+                        <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
+                            <i class="fas fa-phone-alt"></i><span>Chiama</span>
+                        </a>
+                        <button onclick="deleteRelativeDoctor('${currentRelative}', ${dIdx})" class="text-rose-500 p-1.5"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 </div>
             `).join('');
 
-            let remindersHtml = rel.reminders.map(r => `
+            let remindersHtml = (rel.reminders || []).map(r => `
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/60 dark:bg-gray-800 text-xs shadow-sm">
                     <div class="flex items-center space-x-2">
                         <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleRelativeReminder('${currentRelative}', '${r.id}')" class="w-4 h-4 rounded text-indigo-600">
@@ -1267,30 +1287,70 @@
 
             container.innerHTML = `
                 <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
-                    <h3 class="text-sm font-bold flex items-center justify-between"><span>Contatti Utili & Dottori (${rel.name})</span><i class="fas fa-user-md text-indigo-500"></i></h3>
-                    <div class="space-y-2">${doctorsHtml}</div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold">Dottori & Contatti (${rel.name})</h3>
+                        <button onclick="addRelativeDoctorPrompt('${currentRelative}')" class="text-xs text-indigo-500 font-bold">+ Aggiungi Dottore</button>
+                    </div>
+                    <div class="space-y-2">${doctorsHtml || '<div class="text-xs text-gray-400">Nessun dottore inserito.</div>'}</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
-                    <div class="flex justify-between items-center"><h3 class="text-sm font-bold">Promemoria & Visite (${rel.name})</h3><button onclick="addRelativeReminderPrompt('${currentRelative}')" class="text-xs text-indigo-500 font-bold">+ Aggiungi</button></div>
-                    <div class="space-y-2">${remindersHtml}</div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold">Promemoria & Visite (${rel.name})</h3>
+                        <button onclick="addRelativeReminderPrompt('${currentRelative}')" class="text-xs text-indigo-500 font-bold">+ Aggiungi Promemoria</button>
+                    </div>
+                    <div class="space-y-2">${remindersHtml || '<div class="text-xs text-gray-400">Nessun promemoria attivo.</div>'}</div>
+                </div>
+                <div class="text-right">
+                    <button onclick="deleteEntireRelative('${currentRelative}')" class="text-[11px] text-rose-500 hover:underline font-semibold">
+                        <i class="fas fa-trash-alt mr-1"></i> Elimina scheda ${rel.name}
+                    </button>
                 </div>
             `;
         }
 
         function addNewRelativePrompt() {
             let appData = window.appData;
-            const name = prompt('Inserisci il nome del Parente:');
-            if (name) {
+            const name = prompt('Inserisci il nome del Parente (es. Mamma, Zia Anna):');
+            if (name && name.trim().length > 0) {
                 const key = 'rel_' + Date.now();
                 if (!appData.relatives) appData.relatives = {};
                 appData.relatives[key] = {
                     name: name.trim(),
-                    doctors: [{ role: 'Medico di Base', name: 'Da inserire', phone: '+390000000000' }],
+                    doctors: [],
                     reminders: []
                 };
                 currentRelative = key;
                 saveLocalData();
             }
+        }
+
+        function deleteEntireRelative(relKey) {
+            let appData = window.appData;
+            if (confirm('Vuoi eliminare questo parente e tutti i suoi dati?')) {
+                delete appData.relatives[relKey];
+                const keys = Object.keys(appData.relatives);
+                currentRelative = keys.length > 0 ? keys[0] : null;
+                saveLocalData();
+            }
+        }
+
+        function addRelativeDoctorPrompt(relKey) {
+            let appData = window.appData;
+            const role = prompt('Ruolo dottore (es. Medico di base, Cardiologo):');
+            if (!role) return;
+            const name = prompt('Nome del Dottore:');
+            if (!name) return;
+            const phone = prompt('Numero di telefono:', '+39');
+
+            if (!appData.relatives[relKey].doctors) appData.relatives[relKey].doctors = [];
+            appData.relatives[relKey].doctors.push({ role, name, phone: phone || '' });
+            saveLocalData();
+        }
+
+        function deleteRelativeDoctor(relKey, docIdx) {
+            let appData = window.appData;
+            appData.relatives[relKey].doctors.splice(docIdx, 1);
+            saveLocalData();
         }
 
         function toggleRelativeReminder(relKey, id) {
@@ -1302,16 +1362,15 @@
 
         function deleteRelativeReminder(relKey, id) {
             let appData = window.appData;
-            if (confirm('Vuoi cancellare questo promemoria?')) {
-                appData.relatives[relKey].reminders = appData.relatives[relKey].reminders.filter(r => r.id !== id);
-                saveLocalData();
-            }
+            appData.relatives[relKey].reminders = appData.relatives[relKey].reminders.filter(r => r.id !== id);
+            saveLocalData();
         }
 
         function addRelativeReminderPrompt(relKey) {
             let appData = window.appData;
             const title = prompt('Inserisci Promemoria per il parente:');
             if (title) {
+                if (!appData.relatives[relKey].reminders) appData.relatives[relKey].reminders = [];
                 appData.relatives[relKey].reminders.push({
                     id: Date.now().toString(),
                     title,
@@ -1341,7 +1400,7 @@
             const child = appData.children[currentChild];
             const container = document.getElementById('childCardContainer');
 
-            let doctorsHtml = child.doctors.map(d => `
+            let doctorsHtml = (child.doctors || []).map(d => `
                 <div class="flex justify-between items-center bg-white/60 dark:bg-gray-800 p-3 rounded-xl shadow-sm">
                     <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider">${d.role}</div><div class="text-sm font-bold">${d.name}</div></div>
                     <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
@@ -1350,7 +1409,7 @@
                 </div>
             `).join('');
 
-            let remindersHtml = child.reminders.map(r => `
+            let remindersHtml = (child.reminders || []).map(r => `
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/60 dark:bg-gray-800 text-xs shadow-sm">
                     <div class="flex items-center space-x-2">
                         <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleReminder('${currentChild}', '${r.id}')" class="w-4 h-4 rounded text-indigo-600">
@@ -1364,7 +1423,6 @@
             `).join('');
 
             container.innerHTML = `
-                <!-- SEZIONE INFO & ANAGRAFICA -->
                 <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3 border border-indigo-500/20">
                     <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
                         <div class="flex items-center space-x-2">
@@ -1446,6 +1504,7 @@
             let appData = window.appData;
             const title = prompt('Inserisci Promemoria:');
             if (title) {
+                if (!appData.children[childKey].reminders) appData.children[childKey].reminders = [];
                 appData.children[childKey].reminders.push({
                     id: Date.now().toString(),
                     title,
