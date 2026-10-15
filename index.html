@@ -336,6 +336,30 @@
             </div>
         </section>
 
+        <!-- TAB 3.5: VEICOLI & MEZZI (NUOVA SEZIONE) -->
+        <section id="tab-veicoli" class="tab-content space-y-4 hidden">
+            <div class="bg-gradient-to-r from-sky-700 to-indigo-800 text-white rounded-3xl p-5 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <h2 class="text-lg font-bold font-brand tracking-wide">Gestione Veicoli & Mezzi 🚗</h2>
+                <p class="text-xs opacity-90">Rifornimenti rapidi, spese meccaniche, bollo e assicurazione</p>
+            </div>
+
+            <!-- TABS VEICOLI -->
+            <div class="flex bg-gray-200/80 dark:bg-gray-800 p-1 rounded-2xl overflow-x-auto scrollbar-none" id="vehiclesTabsContainer">
+            </div>
+
+            <!-- SCHEDA VEICOLO SELEZIONATO -->
+            <div id="vehicleCardContainer" class="space-y-4">
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-sm text-center space-y-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">Aggiungi nuovo mezzo di trasporto</h3>
+                <button onclick="addNewVehiclePrompt()" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold tap-active shadow-sm">
+                    <i class="fas fa-car mr-1"></i> Aggiungi Veicolo (es. Moto, Auto)
+                </button>
+            </div>
+        </section>
+
         <!-- TAB 4: ALTRI PARENTI -->
         <section id="tab-parenti" class="tab-content space-y-4 hidden">
             <div class="flex bg-gray-200/80 dark:bg-gray-800 p-1 rounded-2xl overflow-x-auto scrollbar-none" id="relativesTabsContainer">
@@ -606,6 +630,10 @@
                 <i class="fas fa-user-friends text-base"></i>
                 <span class="text-[9px] font-bold mt-0.5">Genitori</span>
             </button>
+            <button onclick="showTab('veicoli')" id="nav-veicoli" class="nav-btn flex flex-col items-center text-gray-400">
+                <i class="fas fa-car text-base"></i>
+                <span class="text-[9px] font-bold mt-0.5">Veicoli</span>
+            </button>
             <button onclick="showTab('parenti')" id="nav-parenti" class="nav-btn flex flex-col items-center text-gray-400">
                 <i class="fas fa-users text-base"></i>
                 <span class="text-[9px] font-bold mt-0.5">Parenti</span>
@@ -613,10 +641,6 @@
             <button onclick="showTab('spesa')" id="nav-spesa" class="nav-btn flex flex-col items-center text-gray-400">
                 <i class="fas fa-shopping-cart text-base"></i>
                 <span class="text-[9px] font-bold mt-0.5">Spesa</span>
-            </button>
-            <button onclick="showTab('giochi')" id="nav-giochi" class="nav-btn flex flex-col items-center text-gray-400">
-                <i class="fas fa-gamepad text-base"></i>
-                <span class="text-[9px] font-bold mt-0.5">Giochi</span>
             </button>
             <button onclick="showTab('settings')" id="nav-settings" class="nav-btn flex flex-col items-center text-gray-400">
                 <i class="fas fa-sliders-h text-base"></i>
@@ -739,6 +763,18 @@
                     reminders: [{ id: 'rel_1', title: 'Visita Cardiologo', date: '2026-11-12', done: false }]
                 }
             },
+            vehicles: {
+                alfa_156: {
+                    name: 'Alfa Romeo 156',
+                    fuelPresets: [5, 10, 15, 20, 30],
+                    deadlines: [
+                        { id: 'v_dl1', title: 'Scadenza Bollo Auto', date: '2026-12-31', amount: 180.00 },
+                        { id: 'v_dl2', title: 'Assicurazione RCA', date: '2026-11-15', amount: 450.00 }
+                    ],
+                    refuels: [],
+                    mechanic: []
+                }
+            },
             parentDeadlines: [],
             grocery: [
                 { category: 'Freschi', items: [{ name: 'Latte', qty: 2, active: true }, { name: 'Uova', qty: 1, active: true }] }
@@ -768,6 +804,7 @@
                 window.appData.lastActiveMonth = serverData.lastActiveMonth || new Date().toISOString().slice(0, 7);
                 window.appData.children = serverData.children || defaultAppData.children;
                 window.appData.relatives = serverData.relatives || defaultAppData.relatives;
+                window.appData.vehicles = serverData.vehicles || defaultAppData.vehicles;
                 window.appData.parentDeadlines = serverData.parentDeadlines || [];
                 window.appData.grocery = serverData.grocery || defaultAppData.grocery;
                 window.appData.settings = serverData.settings || defaultAppData.settings;
@@ -841,6 +878,7 @@
     <script>
         let currentChild = 'simone';
         let currentRelative = null;
+        let currentVehicle = null;
         let myChart = null;
 
         function checkMonthlyRollover() {
@@ -929,6 +967,8 @@
             renderChildCard();
             renderUnifiedCalendar();
             renderParentDeadlines();
+            renderVehiclesTabs();
+            renderVehicleCard();
             renderRelativesTabs();
             renderRelativeCard();
             renderGrocery();
@@ -1142,6 +1182,325 @@
             if (!myChart) return;
             myChart.data.datasets[0].data = [Math.max(0, giacenza), uscite];
             myChart.update();
+        }
+
+        // SEZIONE VEICOLI & MEZZI
+        function renderVehiclesTabs() {
+            let appData = window.appData;
+            const container = document.getElementById('vehiclesTabsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!appData.vehicles) appData.vehicles = {};
+            const keys = Object.keys(appData.vehicles);
+
+            if (keys.length === 0) {
+                container.innerHTML = '<div class="text-xs text-gray-400 p-2">Nessun veicolo inserito.</div>';
+                currentVehicle = null;
+                renderVehicleCard();
+                return;
+            }
+
+            if (!currentVehicle || !appData.vehicles[currentVehicle]) {
+                currentVehicle = keys[0];
+            }
+
+            keys.forEach(key => {
+                const veh = appData.vehicles[key];
+                const isActive = (currentVehicle === key);
+                const btn = document.createElement('button');
+                btn.onclick = () => switchVehicle(key);
+                btn.className = `flex-1 py-2 px-3 text-xs font-bold rounded-xl whitespace-nowrap transition-all ${isActive ? 'bg-white dark:bg-theme-cardDark text-zinc-900 dark:text-white shadow-sm' : 'text-gray-500'}`;
+                btn.innerText = `🚗 ${veh.name}`;
+                container.appendChild(btn);
+            });
+        }
+
+        function switchVehicle(vehKey) {
+            currentVehicle = vehKey;
+            renderVehiclesTabs();
+            renderVehicleCard();
+        }
+
+        function renderVehicleCard() {
+            let appData = window.appData;
+            const container = document.getElementById('vehicleCardContainer');
+            if (!container) return;
+
+            if (!appData.vehicles || Object.keys(appData.vehicles).length === 0 || !currentVehicle || !appData.vehicles[currentVehicle]) {
+                container.innerHTML = '<div class="glass-card rounded-2xl p-6 text-center text-xs text-gray-400">Nessun veicolo selezionato. Aggiungi un mezzo qui sotto.</div>';
+                return;
+            }
+
+            const veh = appData.vehicles[currentVehicle];
+            if (!veh.fuelPresets) veh.fuelPresets = [5, 10, 15, 20, 30];
+            if (!veh.deadlines) veh.deadlines = [];
+            if (!veh.refuels) veh.refuels = [];
+            if (!veh.mechanic) veh.mechanic = [];
+
+            // Generazione pulsanti rifornimento
+            let presetsHtml = veh.fuelPresets.map((val, pIdx) => `
+                <div class="relative group">
+                    <button onclick="addQuickFuel('${currentVehicle}', ${val})" class="w-full bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 hover:bg-sky-100 text-sky-700 dark:text-sky-300 font-bold py-3 rounded-xl text-xs tap-active shadow-sm flex flex-col items-center justify-center">
+                        <i class="fas fa-gas-pump text-sm mb-1"></i>
+                        <span>€ ${val}</span>
+                    </button>
+                    <button onclick="removeFuelPreset('${currentVehicle}', ${pIdx})" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-500 text-white rounded-full text-[9px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow" title="Elimina tasto">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            // Scadenze (Bollo, Assicurazione, Revisione)
+            let deadlinesHtml = veh.deadlines.map((dl, dIdx) => `
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/70 dark:bg-gray-800 text-xs border border-sky-100 dark:border-sky-900/30 shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950 flex items-center justify-center text-amber-600 dark:text-amber-300 font-bold">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">${dl.title}</div>
+                            <div class="text-[10px] text-gray-400">Scadenza: ${dl.date}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right"><div class="font-extrabold text-xs text-sky-600 dark:text-sky-400">€ ${parseFloat(dl.amount).toFixed(2)}</div></div>
+                        <button onclick="deleteVehicleDeadline('${currentVehicle}', ${dIdx})" class="p-1.5 bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-300 rounded-lg tap-active text-[11px]">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Spese Meccaniche & Manutenzione
+            let mechanicHtml = veh.mechanic.map((m, mIdx) => `
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/70 dark:bg-gray-800 text-xs border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950 flex items-center justify-center text-rose-600 dark:text-rose-300 font-bold">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">${m.desc}</div>
+                            <div class="text-[10px] text-gray-400">Data: ${m.date}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right"><div class="font-extrabold text-xs text-rose-600 dark:text-rose-400">€ ${parseFloat(m.amount).toFixed(2)}</div></div>
+                        <button onclick="deleteVehicleMechanic('${currentVehicle}', ${mIdx})" class="p-1.5 bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-300 rounded-lg tap-active text-[11px]">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <!-- SCHEDA RIFORNIMENTO RAPIDO -->
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3 border border-sky-500/20">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-sky-600 dark:text-sky-400">⛽ Rifornimento Rapido (${veh.name})</h3>
+                        <button onclick="addCustomFuelPrompt('${currentVehicle}')" class="text-xs text-sky-600 dark:text-sky-400 font-bold">+ Aggiungi Tasto €</button>
+                    </div>
+                    <p class="text-[11px] text-gray-500">Tocca un importo per registrarlo immediatamente tra le spese e i rifornimenti:</p>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 pt-1">
+                        ${presetsHtml}
+                    </div>
+                    <div class="pt-2 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                        <span class="text-xs text-gray-500 font-medium">Oppure inserisci importo libero:</span>
+                        <div class="flex space-x-2">
+                            <input type="number" step="0.01" id="customFuelAmount" placeholder="€ es. 25" class="w-24 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl p-1.5 text-xs text-center font-bold">
+                            <button onclick="addFreeFuel('${currentVehicle}')" class="bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold tap-active">Registra</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCADENZE VEICOLO (Bollo, Assicurazione, Revisione) -->
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold">Scadenze Bollo & Assicurazione (${veh.name})</h3>
+                        <button onclick="addVehicleDeadlinePrompt('${currentVehicle}')" class="text-xs text-sky-600 font-bold">+ Nuova Scadenza</button>
+                    </div>
+                    <div class="space-y-2">${deadlinesHtml || '<div class="text-xs text-gray-400">Nessuna scadenza registrata per questo mezzo.</div>'}</div>
+                </div>
+
+                <!-- SPESE MECCANICHE -->
+                <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold">Spese Meccaniche & Manutenzione (${veh.name})</h3>
+                        <button onclick="addVehicleMechanicPrompt('${currentVehicle}')" class="text-xs text-sky-600 font-bold">+ Nuova Spesa Officina</button>
+                    </div>
+                    <div class="space-y-2">${mechanicHtml || '<div class="text-xs text-gray-400">Nessuna spesa meccanica registrata.</div>'}</div>
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <button onclick="renameVehiclePrompt('${currentVehicle}')" class="text-[11px] text-indigo-500 hover:underline font-semibold">
+                        <i class="fas fa-pencil-alt mr-1"></i> Rinomina veicolo
+                    </button>
+                    <button onclick="deleteEntireVehicle('${currentVehicle}')" class="text-[11px] text-rose-500 hover:underline font-semibold">
+                        <i class="fas fa-trash-alt mr-1"></i> Elimina veicolo
+                    </button>
+                </div>
+            `;
+        }
+
+        function addNewVehiclePrompt() {
+            let appData = window.appData;
+            const name = prompt('Inserisci il nome del Veicolo (es. Daewoo Matiz, Voge SR3):');
+            if (name && name.trim().length > 0) {
+                const key = 'veh_' + Date.now();
+                if (!appData.vehicles) appData.vehicles = {};
+                appData.vehicles[key] = {
+                    name: name.trim(),
+                    fuelPresets: [5, 10, 15, 20, 30],
+                    deadlines: [],
+                    refuels: [],
+                    mechanic: []
+                };
+                currentVehicle = key;
+                saveLocalData();
+            }
+        }
+
+        function renameVehiclePrompt(vehKey) {
+            let appData = window.appData;
+            const veh = appData.vehicles[vehKey];
+            const newName = prompt('Rinomina veicolo:', veh.name);
+            if (newName && newName.trim().length > 0) {
+                veh.name = newName.trim();
+                saveLocalData();
+            }
+        }
+
+        function deleteEntireVehicle(vehKey) {
+            let appData = window.appData;
+            if (confirm('Vuoi eliminare questo veicolo e tutti i dati correlati?')) {
+                delete appData.vehicles[vehKey];
+                const keys = Object.keys(appData.vehicles);
+                currentVehicle = keys.length > 0 ? keys[0] : null;
+                saveLocalData();
+            }
+        }
+
+        function addQuickFuel(vehKey, amount) {
+            let appData = window.appData;
+            const veh = appData.vehicles[vehKey];
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            // 1. Registra nel veicolo
+            veh.refuels.push({ id: 'ref_' + Date.now(), amount, date: todayStr });
+
+            // 2. Sincronizza automaticamente con le Finanze della Famiglia (Tab 1)
+            if (!appData.transactions) appData.transactions = [];
+            appData.transactions.push({
+                id: 'trans_fuel_' + Date.now(),
+                type: 'uscita',
+                desc: `Rifornimento Carburante (${veh.name})`,
+                amount: parseFloat(amount),
+                date: todayStr,
+                category: 'Auto',
+                status: 'Saldato'
+            });
+
+            saveLocalData();
+            alert(`Rifornimento di € ${amount} registrato ed aggiunto alle finanze della famiglia! ⛽`);
+        }
+
+        function addFreeFuel(vehKey) {
+            const input = document.getElementById('customFuelAmount');
+            const val = parseFloat(input.value);
+            if (isNaN(val) || val <= 0) {
+                alert('Inserisci un importo valido.');
+                return;
+            }
+            addQuickFuel(vehKey, val);
+            input.value = '';
+        }
+
+        function addCustomFuelPrompt(vehKey) {
+            let appData = window.appData;
+            const veh = appData.vehicles[vehKey];
+            const val = prompt('Inserisci il valore in euro per il nuovo tasto rapido (es. 25, 50):');
+            const num = parseFloat(val);
+            if (!isNaN(num) && num > 0) {
+                veh.fuelPresets.push(num);
+                veh.fuelPresets.sort((a, b) => a - b);
+                saveLocalData();
+            }
+        }
+
+        function removeFuelPreset(vehKey, pIdx) {
+            let appData = window.appData;
+            const veh = appData.vehicles[vehKey];
+            if (veh.fuelPresets.length <= 1) {
+                alert('Devi mantenere almeno un tasto rapido.');
+                return;
+            }
+            veh.fuelPresets.splice(pIdx, 1);
+            saveLocalData();
+        }
+
+        function addVehicleDeadlinePrompt(vehKey) {
+            let appData = window.appData;
+            const veh = appData.vehicles[vehKey];
+            const title = prompt('Descrizione scadenza (es. Bollo Auto, Assicurazione, Revisione):');
+            if (!title) return;
+            const date = prompt('Data di scadenza (AAAA-MM-GG):', new Date().toISOString().split('T')[0]);
+            if (!date) return;
+            const amount = parseFloat(prompt('Importo previsto (€):', '0')) || 0;
+
+            veh.deadlines.push({ id: 'vdl_' + Date.now(), title, date, amount });
+
+            // Aggiungi anche alle scadenze generali o finanziarie se previsto
+            if (!appData.transactions) appData.transactions = [];
+            appData.transactions.push({
+                id: 'trans_vdl_' + Date.now(),
+                type: 'scadenza',
+                desc: `${title} (${veh.name})`,
+                amount,
+                date,
+                category: 'Auto',
+                status: 'In Scadenza'
+            });
+
+            saveLocalData();
+        }
+
+        function deleteVehicleDeadline(vehKey, dIdx) {
+            let appData = window.appData;
+            appData.vehicles[vehKey].deadlines.splice(dIdx, 1);
+            saveLocalData();
+        }
+
+        function addVehicleMechanicPrompt(vehKey) {
+            let appData = window.appData;
+            const veh = appData.vehicles[vehKey];
+            const desc = prompt('Descrizione spesa meccanica (es. Cambio olio, Sostituzione ammortizzatori):');
+            if (!desc) return;
+            const amount = parseFloat(prompt('Importo spesa (€):'));
+            if (isNaN(amount) || amount <= 0) return;
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            veh.mechanic.push({ id: 'mech_' + Date.now(), desc, amount, date: todayStr });
+
+            // Sincronizza con le finanze
+            if (!appData.transactions) appData.transactions = [];
+            appData.transactions.push({
+                id: 'trans_mech_' + Date.now(),
+                type: 'uscita',
+                desc: `Officina: ${desc} (${veh.name})`,
+                amount,
+                date: todayStr,
+                category: 'Auto',
+                status: 'Saldato'
+            });
+
+            saveLocalData();
+            alert('Spesa meccanica registrata e sincronizzata con le finanze!');
+        }
+
+        function deleteVehicleMechanic(vehKey, mIdx) {
+            let appData = window.appData;
+            appData.vehicles[vehKey].mechanic.splice(mIdx, 1);
+            saveLocalData();
         }
 
         // SCADENZE ANNUARIE GENITORI
@@ -1399,7 +1758,7 @@
             }
         }
 
-        // FIGLI & CALENDARIO UNICO (Con Modifica e Cancella Dottore integrati)
+        // FIGLI & CALENDARIO UNICO
         function switchChild(childKey) {
             currentChild = childKey;
             document.querySelectorAll('.child-tab-btn').forEach(btn => {
