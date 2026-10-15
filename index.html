@@ -787,7 +787,6 @@
                 applyTheme(window.appData.settings.theme || 'bw');
                 populateLoginUserDropdown();
 
-                // GESTIONE INDIPENDENZA DISPOSITIVO LOCALE
                 const localActiveUserId = localStorage.getItem('salvaggio_active_user_id');
                 if (localActiveUserId) {
                     const foundUser = window.appData.users.find(u => u.id === localActiveUserId);
@@ -1211,7 +1210,7 @@
             }
         }
 
-        // SEZIONE ALTRI PARENTI (Corretta e stabilizzata)
+        // SEZIONE ALTRI PARENTI
         function renderRelativesTabs() {
             let appData = window.appData;
             const container = document.getElementById('relativesTabsContainer');
@@ -1267,7 +1266,8 @@
                         <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
                             <i class="fas fa-phone-alt"></i><span>Chiama</span>
                         </a>
-                        <button onclick="deleteRelativeDoctor('${currentRelative}', ${dIdx})" class="text-rose-500 p-1.5"><i class="fas fa-trash-alt"></i></button>
+                        <button onclick="editRelativeDoctorPrompt('${currentRelative}', ${dIdx})" class="p-1.5 bg-gray-100 dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 rounded-lg tap-active text-[11px]" title="Modifica"><i class="fas fa-pencil-alt"></i></button>
+                        <button onclick="deleteRelativeDoctor('${currentRelative}', ${dIdx})" class="text-rose-500 p-1.5" title="Elimina"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -1347,10 +1347,28 @@
             saveLocalData();
         }
 
+        function editRelativeDoctorPrompt(relKey, docIdx) {
+            let appData = window.appData;
+            const doc = appData.relatives[relKey].doctors[docIdx];
+            const role = prompt('Modifica Ruolo dottore:', doc.role);
+            if (role === null) return;
+            const name = prompt('Modifica Nome del Dottore:', doc.name);
+            if (name === null) return;
+            const phone = prompt('Modifica Numero di telefono:', doc.phone);
+            if (phone === null) return;
+
+            doc.role = role;
+            doc.name = name;
+            doc.phone = phone;
+            saveLocalData();
+        }
+
         function deleteRelativeDoctor(relKey, docIdx) {
             let appData = window.appData;
-            appData.relatives[relKey].doctors.splice(docIdx, 1);
-            saveLocalData();
+            if (confirm('Vuoi rimuovere questo dottore?')) {
+                appData.relatives[relKey].doctors.splice(docIdx, 1);
+                saveLocalData();
+            }
         }
 
         function toggleRelativeReminder(relKey, id) {
@@ -1381,7 +1399,7 @@
             }
         }
 
-        // FIGLI & CALENDARIO UNICO
+        // FIGLI & CALENDARIO UNICO (Con Modifica e Cancella Dottore integrati)
         function switchChild(childKey) {
             currentChild = childKey;
             document.querySelectorAll('.child-tab-btn').forEach(btn => {
@@ -1400,12 +1418,16 @@
             const child = appData.children[currentChild];
             const container = document.getElementById('childCardContainer');
 
-            let doctorsHtml = (child.doctors || []).map(d => `
+            let doctorsHtml = (child.doctors || []).map((d, dIdx) => `
                 <div class="flex justify-between items-center bg-white/60 dark:bg-gray-800 p-3 rounded-xl shadow-sm">
                     <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider">${d.role}</div><div class="text-sm font-bold">${d.name}</div></div>
-                    <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
-                        <i class="fas fa-phone-alt"></i><span>Chiama</span>
-                    </a>
+                    <div class="flex items-center space-x-2">
+                        <a href="tel:${d.phone}" class="bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 tap-active">
+                            <i class="fas fa-phone-alt"></i><span>Chiama</span>
+                        </a>
+                        <button onclick="editChildDoctorPrompt('${currentChild}', ${dIdx})" class="p-1.5 bg-gray-100 dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 rounded-lg tap-active text-[11px]" title="Modifica"><i class="fas fa-pencil-alt"></i></button>
+                        <button onclick="deleteChildDoctor('${currentChild}', ${dIdx})" class="text-rose-500 p-1.5" title="Elimina"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 </div>
             `).join('');
 
@@ -1461,14 +1483,54 @@
                 </div>
 
                 <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
-                    <h3 class="text-sm font-bold flex items-center justify-between"><span>Contatti Utili & Dottori (${child.name})</span><i class="fas fa-user-md text-indigo-500"></i></h3>
-                    <div class="space-y-2">${doctorsHtml}</div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold">Contatti Utili & Dottori (${child.name})</h3>
+                        <button onclick="addChildDoctorPrompt('${currentChild}')" class="text-xs text-indigo-500 font-bold">+ Aggiungi Dottore</button>
+                    </div>
+                    <div class="space-y-2">${doctorsHtml || '<div class="text-xs text-gray-400">Nessun dottore inserito.</div>'}</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
                     <div class="flex justify-between items-center"><h3 class="text-sm font-bold">Promemoria & Scadenze (${child.name})</h3><button onclick="addReminderPrompt('${currentChild}')" class="text-xs text-indigo-500 font-bold">+ Aggiungi</button></div>
-                    <div class="space-y-2">${remindersHtml}</div>
+                    <div class="space-y-2">${remindersHtml || '<div class="text-xs text-gray-400">Nessun promemoria attivo.</div>'}</div>
                 </div>
             `;
+        }
+
+        function addChildDoctorPrompt(childKey) {
+            let appData = window.appData;
+            const role = prompt('Ruolo dottore (es. Pediatra, Dentista):');
+            if (!role) return;
+            const name = prompt('Nome del Dottore:');
+            if (!name) return;
+            const phone = prompt('Numero di telefono:', '+39');
+
+            if (!appData.children[childKey].doctors) appData.children[childKey].doctors = [];
+            appData.children[childKey].doctors.push({ role, name, phone: phone || '' });
+            saveLocalData();
+        }
+
+        function editChildDoctorPrompt(childKey, docIdx) {
+            let appData = window.appData;
+            const doc = appData.children[childKey].doctors[docIdx];
+            const role = prompt('Modifica Ruolo dottore:', doc.role);
+            if (role === null) return;
+            const name = prompt('Modifica Nome del Dottore:', doc.name);
+            if (name === null) return;
+            const phone = prompt('Modifica Numero di telefono:', doc.phone);
+            if (phone === null) return;
+
+            doc.role = role;
+            doc.name = name;
+            doc.phone = phone;
+            saveLocalData();
+        }
+
+        function deleteChildDoctor(childKey, docIdx) {
+            let appData = window.appData;
+            if (confirm('Vuoi rimuovere questo dottore?')) {
+                appData.children[childKey].doctors.splice(docIdx, 1);
+                saveLocalData();
+            }
         }
 
         function updateChildInfo(childKey, field, val) {
