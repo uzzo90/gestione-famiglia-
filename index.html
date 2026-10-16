@@ -137,7 +137,7 @@
 
     <!-- SCHERMATA LOGIN & PRESENTAZIONE -->
     <div id="welcomeLoginOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-zinc-900 to-black text-white transition-opacity duration-300">
-        <div class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 text-center relative overflow-hidden">
+        <div class="w-full max-w-md bg-white/15 backdrop-blur-xl border border-white/20 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 text-center relative overflow-hidden">
             <div class="absolute -top-12 -left-12 w-32 h-32 bg-indigo-500/30 rounded-full blur-2xl pointer-events-none"></div>
             <div class="absolute -bottom-12 -right-12 w-36 h-36 bg-rose-500/30 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -411,86 +411,95 @@
             </div>
         </section>
 
-        <!-- TAB 6: PASSATEMPO / GIOCHI (AGGIORNATO E AMPLIATO CONTRO IL COMPUTER) -->
+        <!-- TAB 6: PASSATEMPO / GIOCHI (2048, MASTERMIND, FORZA 4, MEMORY) -->
         <section id="tab-giochi" class="tab-content space-y-4 hidden">
             <div class="bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-3xl p-5 shadow-xl relative overflow-hidden">
                 <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-                <h2 class="text-lg font-brand tracking-wide font-bold">Area Passatempo & Giochi 🎮</h2>
-                <p class="text-xs opacity-90">Sfida il computer in solitario, campo minato, battaglia navale e tris!</p>
+                <h2 class="text-lg font-brand tracking-wide font-bold">Area Rompicapo & Giochi 🎮</h2>
+                <p class="text-xs opacity-90">Sfida il computer a 2048, Mastermind, Forza 4 o Memory!</p>
             </div>
 
             <!-- SELETTORE GIOCO -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button onclick="switchGame('tris')" id="gtab-tris" class="p-3 rounded-2xl bg-white dark:bg-theme-cardDark text-pink-600 dark:text-pink-400 font-bold text-xs shadow-sm tap-active border-2 border-pink-500">
-                    <i class="fas fa-times-circle text-base mb-1 block"></i> Tris
+                <button onclick="switchGame('2048')" id="gtab-2048" class="p-3 rounded-2xl bg-white dark:bg-theme-cardDark text-pink-600 dark:text-pink-400 font-bold text-xs shadow-sm tap-active border-2 border-pink-500">
+                    <i class="fas fa-th text-base mb-1 block"></i> 2048
                 </button>
-                <button onclick="switchGame('solitario')" id="gtab-solitario" class="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-xs shadow-sm tap-active">
-                    <i class="fas fa-clone text-base mb-1 block"></i> Solitario
+                <button onclick="switchGame('mastermind')" id="gtab-mastermind" class="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-xs shadow-sm tap-active">
+                    <i class="fas fa-key text-base mb-1 block"></i> Mastermind
                 </button>
-                <button onclick="switchGame('minesweeper')" id="gtab-minesweeper" class="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-xs shadow-sm tap-active">
-                    <i class="fas fa-bomb text-base mb-1 block"></i> Campo Minato
+                <button onclick="switchGame('forza4')" id="gtab-forza4" class="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-xs shadow-sm tap-active">
+                    <i class="fas fa-grip-horizontal text-base mb-1 block"></i> Forza 4
                 </button>
-                <button onclick="switchGame('battleship')" id="gtab-battleship" class="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-xs shadow-sm tap-active">
-                    <i class="fas fa-ship text-base mb-1 block"></i> Battaglia Navale
+                <button onclick="switchGame('memory')" id="gtab-memory" class="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-xs shadow-sm tap-active">
+                    <i class="fas fa-brain text-base mb-1 block"></i> Memory
                 </button>
             </div>
 
-            <!-- 1. TRIS VS COMPUTER -->
-            <div id="game-tris" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Tris Contro il Computer (Tu: X - IA: O)</h3>
-                <div id="ticTacToeStatus" class="text-xs font-bold text-pink-600 dark:text-pink-400">Tocca una casella per iniziare!</div>
-                <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto pt-1">
-                    <button onclick="makeTicMove(0)" id="tictac-0" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTicMove(1)" id="tictac-1" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTicMove(2)" id="tictac-2" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTicMove(3)" id="tictac-3" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTicMove(4)" id="tictac-4" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTicMove(5)" id="tictac-5" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTicMove(6)" id="tictac-6" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTicMove(7)" id="tictac-7" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm"></button>
-                    <button onclick="makeTic_8()" id="tictac-8" class="h-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-2xl font-bold tap-active shadow-sm" onclick="makeTicMove(8)"></button>
+            <!-- 1. GIOCO 2048 -->
+            <div id="game-2048" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">2048 (Unisci i numeri)</h3>
+                    <div class="text-xs font-bold bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-300 px-3 py-1 rounded-lg">Punteggio: <span id="score2048">0</span></div>
                 </div>
-                <button onclick="resetTicTacToe()" class="text-xs bg-gray-200 dark:bg-gray-700 font-bold px-4 py-2 rounded-xl tap-active mt-2">Ricomincia Tris</button>
-            </div>
-
-            <!-- 2. SOLITARIO SEMPLIFICATO -->
-            <div id="game-solitario" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center hidden">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Solitario di Carte (Pesca dal mazzo)</h3>
-                <p id="solitaireStatus" class="text-xs text-gray-500">Abbina o scarta le carte in ordine decrescente/crescente.</p>
-                <div class="flex justify-center items-center space-x-4 py-4">
-                    <div onclick="drawSolitaireCard()" class="w-20 h-28 bg-indigo-600 text-white rounded-xl shadow-md flex items-center justify-center font-bold cursor-pointer tap-active border-2 border-white/30">
-                        <i class="fas fa-layer-group text-2xl"></i>
-                    </div>
-                    <div id="solitairePile" class="w-20 h-28 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-xl shadow-md flex flex-col items-center justify-center font-bold border-2 border-dashed border-gray-300">
-                        <span class="text-xs text-gray-400">Scarto</span>
-                        <span id="solitaireTopCard" class="text-lg pt-1">-</span>
-                    </div>
-                </div>
-                <button onclick="resetSolitaire()" class="text-xs bg-indigo-600 text-white font-bold px-4 py-2 rounded-xl tap-active">Nuovo Mazzo</button>
-            </div>
-
-            <!-- 3. CAMPO MINATO A LIVELLI -->
-            <div id="game-minesweeper" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center hidden">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Campo Minato (Contro le mine del computer)</h3>
-                <div class="flex justify-center space-x-2">
-                    <button onclick="startMinesweeper('easy')" class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold">Facile (3x3)</button>
-                    <button onclick="startMinesweeper('medium')" class="px-3 py-1 bg-amber-100 text-amber-800 rounded-lg text-xs font-bold">Medio (4x4)</button>
-                    <button onclick="startMinesweeper('hard')" class="px-3 py-1 bg-rose-100 text-rose-800 rounded-lg text-xs font-bold">Difficile (5x5)</button>
-                </div>
-                <div id="mineStatus" class="text-xs font-bold text-indigo-600">Seleziona un livello per iniziare!</div>
-                <div id="mineGridContainer" class="flex justify-center pt-2">
+                <p class="text-xs text-gray-500">Usa i pulsanti direzionali per muovere le tessere. Il computer spawnerà un nuovo numero a ogni mossa!</p>
+                
+                <div id="grid2048" class="grid grid-cols-4 gap-2 max-w-xs mx-auto bg-slate-800 p-3 rounded-2xl">
                     <!-- Generato via JS -->
                 </div>
+
+                <div class="flex justify-center space-x-2 pt-2">
+                    <button onclick="move2048('up')" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 font-bold rounded-xl tap-active text-xs"><i class="fas fa-arrow-up"></i></button>
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="move2048('left')" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 font-bold rounded-xl tap-active text-xs"><i class="fas fa-arrow-left"></i></button>
+                    <button onclick="move2048('down')" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 font-bold rounded-xl tap-active text-xs"><i class="fas fa-arrow-down"></i></button>
+                    <button onclick="move2048('right')" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 font-bold rounded-xl tap-active text-xs"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                <button onclick="init2048()" class="text-xs bg-pink-600 text-white font-bold px-4 py-2 rounded-xl tap-active mt-2">Ricomincia 2048</button>
             </div>
 
-            <!-- 4. BATTAGLIA NAVALE VS COMPUTER -->
-            <div id="game-battleship" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center hidden">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Battaglia Navale (Distruggi la flotta del PC)</h3>
-                <p id="battleshipStatus" class="text-xs text-gray-500">Il computer ha nascosto le sue navi. Clicca sulle coordinate per sparare!</p>
-                <div id="battleshipGrid" class="grid grid-cols-5 gap-1 max-w-xs mx-auto pt-2">
+            <!-- 2. MASTERMIND -->
+            <div id="game-mastermind" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center hidden">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Mastermind (Indovina il codice del PC)</h3>
+                <p id="mastermindStatus" class="text-xs text-gray-500">Il computer ha scelto 4 numeri segreti da 1 a 4. Prova a indovinarli!</p>
+                <div class="flex justify-center space-x-2 pt-2">
+                    <input type="number" id="m1" min="1" max="4" value="1" class="w-12 h-12 text-center text-lg font-bold bg-white dark:bg-gray-800 border rounded-xl">
+                    <input type="number" id="m2" min="1" max="4" value="2" class="w-12 h-12 text-center text-lg font-bold bg-white dark:bg-gray-800 border rounded-xl">
+                    <input type="number" id="m3" min="1" max="4" value="3" class="w-12 h-12 text-center text-lg font-bold bg-white dark:bg-gray-800 border rounded-xl">
+                    <input type="number" id="m4" min="1" max="4" value="4" class="w-12 h-12 text-center text-lg font-bold bg-white dark:bg-gray-800 border rounded-xl">
+                </div>
+                <button onclick="checkMastermind()" class="bg-pink-600 text-white font-bold px-5 py-2 rounded-xl text-xs tap-active">Invia Tentativo</button>
+                <div id="mastermindHistory" class="space-y-1 pt-2 text-xs max-h-32 overflow-y-auto"></div>
+                <button onclick="initMastermind()" class="text-xs text-gray-400 underline">Nuova Partita</button>
+            </div>
+
+            <!-- 3. FORZA 4 -->
+            <div id="game-forza4" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center hidden">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Forza 4 Contro il Computer (Tu: 🔴 - PC: 🔵)</h3>
+                <div id="forza4Status" class="text-xs font-bold text-pink-600">Scegli una colonna per iniziare!</div>
+                <div class="flex justify-center space-x-1 pt-1 pb-1">
+                    <button onclick="playForza4(0)" class="w-8 h-8 bg-gray-200 dark:bg-gray-700 font-bold rounded-lg text-xs tap-active">1</button>
+                    <button onclick="playForza4(1)" class="w-8 h-8 bg-gray-200 dark:bg-gray-700 font-bold rounded-lg text-xs tap-active">2</button>
+                    <button onclick="playForza4(2)" class="w-8 h-8 bg-gray-200 dark:bg-gray-700 font-bold rounded-lg text-xs tap-active">3</button>
+                    <button onclick="playForza4(3)" class="w-8 h-8 bg-gray-200 dark:bg-gray-700 font-bold rounded-lg text-xs tap-active">4</button>
+                    <button onclick="playForza4(4)" class="w-8 h-8 bg-gray-200 dark:bg-gray-700 font-bold rounded-lg text-xs tap-active">5</button>
+                    <button onclick="playForza4(5)" class="w-8 h-8 bg-gray-200 dark:bg-gray-700 font-bold rounded-lg text-xs tap-active">6</button>
+                    <button onclick="playForza4(6)" class="w-8 h-8 bg-gray-200 dark:bg-gray-700 font-bold rounded-lg text-xs tap-active">7</button>
+                </div>
+                <div id="forza4Grid" class="grid grid-cols-7 gap-1 max-w-xs mx-auto bg-indigo-950 p-2 rounded-2xl">
                     <!-- Generato via JS -->
                 </div>
-                <button onclick="initBattleship()" class="text-xs bg-sky-600 text-white font-bold px-4 py-2 rounded-xl tap-active mt-2">Nuova Battaglia</button>
+                <button onclick="initForza4()" class="text-xs bg-gray-200 dark:bg-gray-700 font-bold px-4 py-2 rounded-xl tap-active mt-2">Ricomincia Forza 4</button>
+            </div>
+
+            <!-- 4. MEMORY -->
+            <div id="game-memory" class="game-view glass-card rounded-2xl p-4 shadow-sm space-y-3 text-center hidden">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-200">Memory (Trova le coppie)</h3>
+                <div id="memoryStatus" class="text-xs text-gray-500">Tocca le carte per scoprire le coppie nascoste dal sistema.</div>
+                <div id="memoryGrid" class="grid grid-cols-4 gap-2 max-w-xs mx-auto pt-2">
+                    <!-- Generato via JS -->
+                </div>
+                <button onclick="initMemory()" class="text-xs bg-pink-600 text-white font-bold px-4 py-2 rounded-xl tap-active mt-2">Nuovo Memory</button>
             </div>
         </section>
 
@@ -922,11 +931,14 @@
             applyTheme('bw');
             populateLoginUserDropdown();
             initChart();
-            initBattleship();
+            init2048();
+            initMastermind();
+            initForza4();
+            initMemory();
         });
     </script>
 
-    <!-- JAVASCRIPT LOGIC AGGIORNATA -->
+    <!-- JAVASCRIPT LOGIC COMPLETA -->
     <script>
         let currentChild = 'simone';
         let currentRelative = null;
@@ -2018,12 +2030,12 @@
             });
         }
 
-        // GIOCHI: NAVIGAZIONE E LOGICA CONTRO IL COMPUTER
+        // GIOCHI: NAVIGAZIONE E LOGICA
         function switchGame(gameName) {
             document.querySelectorAll('.game-view').forEach(el => el.classList.add('hidden'));
             document.getElementById(`game-${gameName}`).classList.remove('hidden');
 
-            ['tris', 'solitario', 'minesweeper', 'battleship'].forEach(g => {
+            ['2048', 'mastermind', 'forza4', 'memory'].forEach(g => {
                 const btn = document.getElementById(`gtab-${g}`);
                 if (g === gameName) {
                     btn.className = 'p-3 rounded-2xl bg-white dark:bg-theme-cardDark text-pink-600 dark:text-pink-400 font-bold text-xs shadow-sm tap-active border-2 border-pink-500';
@@ -2033,185 +2045,245 @@
             });
         }
 
-        // 1. TRIS VS COMPUTER
-        let ticBoard = ['', '', '', '', '', '', '', '', ''];
-        let ticActive = true;
+        // 1. 2048 LOGICA
+        let board2048 = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+        let score2048 = 0;
 
-        function makeTicMove(idx) {
-            if (!ticActive || ticBoard[idx] !== '') return;
-            ticBoard[idx] = 'X';
-            document.getElementById(`tictac-${idx}`).innerText = 'X';
-            document.getElementById(`tictac-${idx}`).style.color = '#ec4899';
+        function init2048() {
+            board2048 = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+            score2048 = 0;
+            spawn2048();
+            spawn2048();
+            render2048();
+        }
 
-            if (checkTicWin('X')) {
-                document.getElementById('ticTacToeStatus').innerText = 'Complimenti, hai vinto contro il computer! 🎉';
-                ticActive = false;
-                return;
+        function spawn2048() {
+            let empty = [];
+            for(let r=0; r<4; r++) {
+                for(let c=0; c<4; c++) {
+                    if(board2048[r][c] === 0) empty.push({r, c});
+                }
             }
-            if (!ticBoard.includes('')) {
-                document.getElementById('ticTacToeStatus').innerText = 'Pareggio! 🤝';
-                ticActive = false;
-                return;
+            if(empty.length > 0) {
+                let spot = empty[Math.floor(Math.random() * empty.length)];
+                board2048[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
             }
+        }
 
-            document.getElementById('ticTacToeStatus').innerText = 'Il computer sta pensando...';
-            setTimeout(() => {
-                let emptyIndices = [];
-                ticBoard.forEach((val, i) => { if (val === '') emptyIndices.push(i); });
-                if (emptyIndices.length > 0 && ticActive) {
-                    let aiChoice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-                    ticBoard[aiChoice] = 'O';
-                    const cell = document.getElementById(`tictac-${aiChoice}`);
-                    cell.innerText = 'O';
-                    cell.style.color = '#3b82f6';
+        function render2048() {
+            document.getElementById('score2048').innerText = score2048;
+            let html = '';
+            for(let r=0; r<4; r++) {
+                for(let c=0; c<4; c++) {
+                    let val = board2048[r][c];
+                    let bg = val === 0 ? 'bg-slate-700/50 text-transparent' : (val <= 4 ? 'bg-amber-100 text-amber-900' : (val <= 32 ? 'bg-orange-500 text-white' : 'bg-rose-600 text-white'));
+                    html += `<div class="w-14 h-14 rounded-xl flex items-center justify-center font-extrabold text-sm ${bg}">${val || ''}</div>`;
+                }
+            }
+            document.getElementById('grid2048').innerHTML = html;
+        }
 
-                    if (checkTicWin('O')) {
-                        document.getElementById('ticTacToeStatus').innerText = 'Il computer ha vinto! 🤖';
-                        ticActive = false;
-                    } else if (!ticBoard.includes('')) {
-                        document.getElementById('ticTacToeStatus').innerText = 'Pareggio! 🤝';
-                        ticActive = false;
-                    } else {
-                        document.getElementById('ticTacToeStatus').innerText = 'Tocca a te (X)';
+        function move2048(dir) {
+            let moved = false;
+            let slide = row => {
+                let arr = row.filter(v => v);
+                for(let i=0; i<arr.length-1; i++) {
+                    if(arr[i] === arr[i+1]) {
+                        arr[i] *= 2;
+                        score2048 += arr[i];
+                        arr[i+1] = 0;
                     }
                 }
-            }, 400);
-        }
+                arr = arr.filter(v => v);
+                while(arr.length < 4) arr.push(0);
+                return arr;
+            };
 
-        function checkTicWin(player) {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            return wins.some(w => ticBoard[w[0]] === player && ticBoard[w[1]] === player && ticBoard[w[2]] === player);
-        }
+            if(dir === 'left' || dir === 'right') {
+                for(let r=0; r<4; r++) {
+                    let row = board2048[r];
+                    if(dir === 'right') row.reverse();
+                    let newRow = slide(row);
+                    if(dir === 'right') newRow.reverse();
+                    if(JSON.stringify(board2048[r]) !== JSON.stringify(newRow)) moved = true;
+                    board2048[r] = newRow;
+                }
+            } else {
+                for(let c=0; c<4; c++) {
+                    let col = [board2048[0][c], board2048[1][c], board2048[2][c], board2048[3][c]];
+                    if(dir === 'down') col.reverse();
+                    let newCol = slide(col);
+                    if(dir === 'down') newCol.reverse();
+                    for(let r=0; r<4; r++) {
+                        if(board2048[r][c] !== newCol[r]) moved = true;
+                        board2048[r][c] = newCol[r];
+                    }
+                }
+            }
 
-        function resetTicTacToe() {
-            ticBoard = ['', '', '', '', '', '', '', '', ''];
-            ticActive = true;
-            document.getElementById('ticTacToeStatus').innerText = 'Tocca una casella per iniziare!';
-            for (let i = 0; i < 9; i++) {
-                const cell = document.getElementById(`tictac-${i}`);
-                cell.innerText = '';
-                cell.style.color = '';
+            if(moved) {
+                spawn2048();
+                render2048();
             }
         }
 
-        // 2. SOLITARIO SEMPLIFICATO VS SISTEMA
-        let solitaireDeck = ['A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠', 'A♥', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'J♥', 'Q♥', 'K♥'];
-        let solitaireTop = '-';
+        // 2. MASTERMIND LOGICA
+        let secretCode = [];
+        function initMastermind() {
+            secretCode = [Math.floor(Math.random()*4)+1, Math.floor(Math.random()*4)+1, Math.floor(Math.random()*4)+1, Math.floor(Math.random()*4)+1];
+            document.getElementById('mastermindHistory').innerHTML = '<div class="text-gray-400">Inserisci 4 numeri (1-4) e premi invia.</div>';
+            document.getElementById('mastermindStatus').innerText = 'Il computer ha generato un nuovo codice segreto.';
+        }
 
-        function drawSolitaireCard() {
-            if (solitaireDeck.length === 0) {
-                document.getElementById('solitaireStatus').innerText = 'Mazzo esaurito! Clicca su Nuovo Mazzo.';
+        function checkMastermind() {
+            let guess = [
+                parseInt(document.getElementById('m1').value),
+                parseInt(document.getElementById('m2').value),
+                parseInt(document.getElementById('m3').value),
+                parseInt(document.getElementById('m4').value)
+            ];
+            let exact = 0, near = 0;
+            let secretCopy = [...secretCode];
+            let guessCopy = [...guess];
+
+            for(let i=0; i<4; i++) {
+                if(guessCopy[i] === secretCopy[i]) {
+                    exact++;
+                    secretCopy[i] = null;
+                    guessCopy[i] = null;
+                }
+            }
+            for(let i=0; i<4; i++) {
+                if(guessCopy[i] !== null) {
+                    let idx = secretCopy.indexOf(guessCopy[i]);
+                    if(idx !== -1) {
+                        near++;
+                        secretCopy[idx] = null;
+                    }
+                }
+            }
+
+            let hist = document.getElementById('mastermindHistory');
+            let resHtml = `<div class="p-2 bg-white/60 dark:bg-gray-800 rounded-xl flex justify-between"><span>Tentativo: [${guess.join(', ')}]</span><strong class="text-indigo-600">🎯 ${exact} giusti, 🟡 ${near} presenti</strong></div>`;
+            hist.innerHTML = resHtml + hist.innerHTML;
+
+            if(exact === 4) {
+                document.getElementById('mastermindStatus').innerText = 'Complimenti! Hai indovinato il codice segreto del computer! 🎉';
+            }
+        }
+
+        // 3. FORZA 4 LOGICA
+        let boardF4 = [];
+        let f4Active = true;
+
+        function initForza4() {
+            boardF4 = Array(6).fill(null).map(() => Array(7).fill(0));
+            f4Active = true;
+            document.getElementById('forza4Status').innerText = 'Tocca una colonna (1-7) per inserire il gettone.';
+            renderForza4();
+        }
+
+        function renderForza4() {
+            let html = '';
+            for(let r=0; r<6; r++) {
+                for(let c=0; c<7; c++) {
+                    let val = boardF4[r][c];
+                    let bg = val === 1 ? 'bg-rose-500' : (val === 2 ? 'bg-sky-500' : 'bg-slate-900');
+                    html += `<div class="w-8 h-8 rounded-full ${bg} border border-white/10 m-0.5"></div>`;
+                }
+            }
+            document.getElementById('forza4Grid').innerHTML = html;
+        }
+
+        function playForza4(col) {
+            if(!f4Active) return;
+            let row = -1;
+            for(let r=5; r>=0; r--) {
+                if(boardF4[r][col] === 0) { row = r; break; }
+            }
+            if(row === -1) return;
+
+            boardF4[row][col] = 1; // Giocatore
+            renderForza4();
+
+            if(checkForza4Win(1)) {
+                document.getElementById('forza4Status').innerText = 'Hai vinto contro il computer! 🎉';
+                f4Active = false;
                 return;
             }
-            solitaireTop = solitaireDeck.pop();
-            document.getElementById('solitaireTopCard').innerText = solitaireTop;
-            document.getElementById('solitaireStatus').innerText = `Hai pescato ${solitaireTop}. Continue a pescare o riprova!`;
+
+            // Turno PC Semplice
+            setTimeout(() => {
+                if(!f4Active) return;
+                let emptyCols = [];
+                for(let c=0; c<7; c++) if(boardF4[0][c] === 0) emptyCols.push(c);
+                if(emptyCols.length > 0) {
+                    let pcCol = emptyCols[Math.floor(Math.random() * emptyCols.length)];
+                    let pcRow = -1;
+                    for(let r=5; r>=0; r--) {
+                        if(boardF4[r][pcCol] === 0) { pcRow = r; break; }
+                    }
+                    boardF4[pcRow][pcCol] = 2;
+                    renderForza4();
+                    if(checkForza4Win(2)) {
+                        document.getElementById('forza4Status').innerText = 'Il computer ha vinto! 🤖';
+                        f4Active = false;
+                    }
+                }
+            }, 300);
         }
 
-        function resetSolitaire() {
-            solitaireDeck = ['A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠', 'A♥', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'J♥', 'Q♥', 'K♥'].sort(() => Math.random() - 0.5);
-            solitaireTop = '-';
-            document.getElementById('solitaireTopCard').innerText = '-';
-            document.getElementById('solitaireStatus').innerText = 'Nuovo mazzo mescolato dal computer. Clicca sul mazzo blu per pescare!';
-        }
-
-        // 3. CAMPO MINATO A LIVELLI VS COMPUTER
-        let mineGridSize = 3;
-        let mineList = [];
-        let revealedCount = 0;
-        let mineActive = false;
-
-        function startMinesweeper(level) {
-            mineGridSize = level === 'easy' ? 3 : (level === 'medium' ? 4 : 5);
-            let totalCells = mineGridSize * mineGridSize;
-            let numMines = level === 'easy' ? 1 : (level === 'medium' ? 3 : 6);
-
-            mineList = [];
-            while (mineList.length < numMines) {
-                let r = Math.floor(Math.random() * totalCells);
-                if (!mineList.includes(r)) mineList.push(r);
-            }
-
-            revealedCount = 0;
-            mineActive = true;
-            document.getElementById('mineStatus').innerText = `Livello ${level.toUpperCase()} attivo. Evita le ${numMines} mine nascoste dal PC!`;
-
-            let html = `<div class="grid grid-cols-${mineGridSize} gap-1.5 max-w-xs mx-auto">`;
-            for (let i = 0; i < totalCells; i++) {
-                html += `<button onclick="clickMine(${i})" id="mine-${i}" class="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-xl text-sm font-bold flex items-center justify-center tap-active shadow-sm hover:bg-gray-300">?</button>`;
-            }
-            html += `</div>`;
-            document.getElementById('mineGridContainer').innerHTML = html;
-        }
-
-        function clickMine(idx) {
-            if (!mineActive) return;
-            const btn = document.getElementById(`mine-${idx}`);
-            if (mineList.includes(idx)) {
-                btn.innerHTML = '💣';
-                btn.className = 'w-12 h-12 bg-rose-500 text-white rounded-xl text-sm font-bold flex items-center justify-center shadow-sm';
-                document.getElementById('mineStatus').innerText = 'Boom! Hai beccato una mina nascosta dal computer. Riprova!';
-                mineActive = false;
-                // Rivela tutte
-                mineList.forEach(m => {
-                    document.getElementById(`mine-${m}`).innerHTML = '💣';
-                });
-            } else {
-                btn.innerHTML = '✓';
-                btn.className = 'w-12 h-12 bg-emerald-500 text-white rounded-xl text-sm font-bold flex items-center justify-center shadow-sm';
-                revealedCount++;
-                let target = (mineGridSize * mineGridSize) - mineList.length;
-                if (revealedCount === target) {
-                    document.getElementById('mineStatus').innerText = 'Vittoria! Hai evitato tutte le mine del computer! 🎉';
-                    mineActive = false;
+        function checkForza4Win(p) {
+            for(let r=0; r<6; r++) {
+                for(let c=0; c<7; c++) {
+                    if(c <= 3 && boardF4[r][c]===p && boardF4[r][c+1]===p && boardF4[r][c+2]===p && boardF4[r][c+3]===p) return true;
+                    if(r <= 2 && boardF4[r][c]===p && boardF4[r+1][c]===p && boardF4[r+2][c]===p && boardF4[r+3][c]===p) return true;
                 }
             }
+            return false;
         }
 
-        // 4. BATTAGLIA NAVALE VS COMPUTER (Griglia 5x5)
-        let pcShips = [];
-        let battleshipHits = 0;
-        let battleshipTries = 0;
-        let battleshipActive = true;
+        // 4. MEMORY LOGICA
+        let memoryCards = ['🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '⭐', '⭐'];
+        let memoryFlipped = [];
+        let memoryMatched = [];
 
-        function initBattleship() {
-            pcShips = [];
-            while (pcShips.length < 4) {
-                let pos = Math.floor(Math.random() * 25);
-                if (!pcShips.includes(pos)) pcShips.push(pos);
-            }
-            battleshipHits = 0;
-            battleshipTries = 0;
-            battleshipActive = true;
-            document.getElementById('battleshipStatus').innerText = 'Il computer ha nascosto 4 navi nella griglia 5x5. Clicca per colpire!';
+        function initMemory() {
+            memoryCards.sort(() => Math.random() - 0.5);
+            memoryFlipped = [];
+            memoryMatched = [];
+            document.getElementById('memoryStatus').innerText = 'Trova tutte le coppie nascoste!';
+            renderMemory();
+        }
 
+        function renderMemory() {
             let html = '';
-            for (let i = 0; i < 25; i++) {
-                html += `<button onclick="shootBattleship(${i})" id="ship-${i}" class="h-12 bg-sky-900/60 dark:bg-gray-800 border border-sky-400/30 rounded-xl text-xs font-bold tap-active text-white flex items-center justify-center">🌊</button>`;
-            }
-            document.getElementById('battleshipGrid').innerHTML = html;
+            memoryCards.forEach((card, idx) => {
+                let isUp = memoryFlipped.includes(idx) || memoryMatched.includes(idx);
+                html += `<button onclick="flipMemory(${idx})" class="w-14 h-14 bg-indigo-600 text-white rounded-xl text-xl font-bold flex items-center justify-center tap-active shadow-sm">${isUp ? card : '❓'}</button>`;
+            });
+            document.getElementById('memoryGrid').innerHTML = html;
         }
 
-        function shootBattleship(idx) {
-            if (!battleshipActive) return;
-            const btn = document.getElementById(`ship-${idx}`);
-            if (btn.innerText !== '🌊') return; // Già cliccato
+        function flipMemory(idx) {
+            if(memoryFlipped.length >= 2 || memoryFlipped.includes(idx) || memoryMatched.includes(idx)) return;
+            memoryFlipped.push(idx);
+            renderMemory();
 
-            battleshipTries++;
-            if (pcShips.includes(idx)) {
-                btn.innerText = '💥';
-                btn.className = 'h-12 bg-rose-600 rounded-xl text-xs font-bold text-white flex items-center justify-center';
-                battleshipHits++;
-                if (battleshipHits === 4) {
-                    document.getElementById('battleshipStatus').innerText = `Ottimo! Affondata tutta la flotta in ${battleshipTries} colpi! ⚓🎉`;
-                    battleshipActive = false;
+            if(memoryFlipped.length === 2) {
+                let [i1, i2] = memoryFlipped;
+                if(memoryCards[i1] === memoryCards[i2]) {
+                    memoryMatched.push(i1, i2);
+                    memoryFlipped = [];
+                    if(memoryMatched.length === memoryCards.length) {
+                        document.getElementById('memoryStatus').innerText = 'Ottimo! Hai completato il memory! 🎉';
+                    }
                 } else {
-                    document.getElementById('battleshipStatus').innerText = `Centro! Mancano ${4 - battleshipHits} navi.`;
+                    setTimeout(() => {
+                        memoryFlipped = [];
+                        renderMemory();
+                    }, 600);
                 }
-            } else {
-                btn.innerText = '❌';
-                btn.className = 'h-12 bg-slate-700 rounded-xl text-xs font-bold text-white flex items-center justify-center';
-                document.getElementById('battleshipStatus').innerText = `Acqua! Il computer non ha navi qui.`;
             }
         }
 
